@@ -8,7 +8,7 @@
       <link href="/2022/02/21/%E7%BB%AA%E8%AE%BA/"/>
       <url>/2022/02/21/%E7%BB%AA%E8%AE%BA/</url>
       
-        <content type="html"><![CDATA[<h1 id="第一章-绪论"><a href="#第一章-绪论" class="headerlink" title="第一章 绪论"></a>第一章 绪论</h1><h2 id="1-1-数据结构"><a href="#1-1-数据结构" class="headerlink" title="1.1 数据结构"></a>1.1 数据结构</h2><h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><ul><li><p>数据</p></li><li><p>数据元素、数据项</p><ul><li><p>数据元素是数据的基本单位，通常作为一个整体进行考虑和处理</p></li><li><p>一个数据元素可由若干数据项组成，数据项是构成数据元素的不可分割的最小单位</p></li><li><p><img src="https://pic.chjm.cloud//picgo/202202212009172.png" alt="image-20220221200926093"></p></li></ul></li><li><p>数据对象</p><ul><li>数据对象是<strong>具有相同性质的数据元素的集合</strong>，是数据的一个子集</li><li><img src="https://pic.chjm.cloud//picgo/202202212010772.png" alt="image-20220221201050670"></li></ul></li></ul>]]></content>
+        <content type="html"><![CDATA[<h1 id="第一章-绪论"><a href="#第一章-绪论" class="headerlink" title="第一章 绪论"></a>第一章 绪论</h1><h2 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h2><h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><ul><li><p>数据</p></li><li><p>数据元素、数据项</p><blockquote><p><strong>数据元素是数据的基本单位，通常作为一个整体进行考虑和处理</strong></p><p><strong>一个数据元素可由若干数据项组成，数据项是构成数据元素的不可分割的最小单位</strong></p></blockquote><ul><li><img src="https://pic.chjm.cloud//picgo/202202212009172.png" alt="image-20220221200926093"></li></ul></li><li><p>数据对象</p><ul><li>数据对象是<strong>具有相同性质的数据元素的集合</strong>，是数据的一个子集</li><li><img src="https://pic.chjm.cloud//picgo/202202212010772.png" alt="image-20220221201050670"></li></ul></li><li><p>数据结构</p><ul><li>数据结构是</li></ul></li></ul>]]></content>
       
       
       <categories>
