@@ -4,6 +4,25 @@
   
     
     <entry>
+      <title>栈和队列的应用</title>
+      <link href="/2022/03/09/%E6%A0%88%E5%92%8C%E9%98%9F%E5%88%97%E7%9A%84%E5%BA%94%E7%94%A8/"/>
+      <url>/2022/03/09/%E6%A0%88%E5%92%8C%E9%98%9F%E5%88%97%E7%9A%84%E5%BA%94%E7%94%A8/</url>
+      
+        <content type="html"><![CDATA[<h1 id="栈和队列的应用"><a href="#栈和队列的应用" class="headerlink" title="栈和队列的应用"></a>栈和队列的应用</h1><h2 id="栈的应用"><a href="#栈的应用" class="headerlink" title="栈的应用"></a>栈的应用</h2><h3 id="表达式求值问题"><a href="#表达式求值问题" class="headerlink" title="表达式求值问题"></a>表达式求值问题</h3><ul><li><p>三种算术表达式</p><ul><li><p>中缀表达式</p><ul><li><img src="https://pic.chjm.cloud//picgo/202203092303862.png" alt="image-20220309230312784"></li></ul></li><li><p>后缀表达式</p><ul><li><img src="https://pic.chjm.cloud//picgo/202203092303311.png" alt="image-20220309230318286"></li></ul></li><li><p>前缀表达式</p><ul><li><img src="https://pic.chjm.cloud//picgo/202203092303418.png" alt="image-20220309230323385"></li></ul></li></ul></li><li><p>后缀表达式相关</p><ul><li><p>中缀表达式转后缀表达式（手算）</p><ul><li>左优先原则：只要左边的运算符能先计算，就优先算左边的</li><li><img src="https://pic.chjm.cloud//picgo/202203092304212.png" alt="image-20220309230427175"></li></ul></li><li><p>后缀表达式求值</p><ul><li>注意：先出栈的是“右操作数”</li><li><img src="https://pic.chjm.cloud//picgo/202203092304547.png" alt="image-20220309230438512"></li></ul></li></ul></li><li><p>前缀表达式相关</p><ul><li><p>中缀表达式转前缀表达式（手算）</p><ul><li>右优先原则：只要右边的运算符能先计算，就优先算右边的</li><li><img src="https://pic.chjm.cloud//picgo/202203092304664.png" alt="image-20220309230443631"></li></ul></li><li><p>前缀表达式求值</p><ul><li>注意：先出栈的是“左操作数”</li><li><img src="https://pic.chjm.cloud//picgo/202203092304007.png" alt="image-20220309230447970"></li></ul></li></ul></li><li><p>中缀表达式转后缀表达式（机算）</p><ul><li><p>无界限值的情况</p><ul><li><img src="https://pic.chjm.cloud//picgo/202203092304036.png" alt="image-20220309230452997"></li></ul></li><li><p>有界限值的情况</p><ul><li><img src="https://pic.chjm.cloud//picgo/202203092304058.png" alt="image-20220309230457016"></li></ul></li></ul></li><li><p>中缀表达式的计算（用栈实现）</p><ul><li>注意乘除的优先级大于加减的优先级</li><li><img src="https://pic.chjm.cloud//picgo/202203092305339.png" alt="image-20220309230503304"></li></ul></li></ul><h3 id="栈在递归中的应用"><a href="#栈在递归中的应用" class="headerlink" title="栈在递归中的应用"></a>栈在递归中的应用</h3><ul><li><p>特点</p><ul><li><p>通常把一个大型的复杂问题层层转化为一个与原问题相似的规模较小的问题来求解</p></li><li><p>两部分</p><ul><li>1.递归表达式（递归体）</li><li>2.边界条件（递归出口）</li></ul></li><li><p>递归次数过多容易造成栈溢出</p></li></ul></li><li><p>函数调用过程</p><ul><li><img src="https://pic.chjm.cloud//picgo/202203092305266.png" alt="image-20220309230510207"></li></ul></li><li><p>递归算法求阶乘</p><ul><li><img src="https://pic.chjm.cloud//picgo/202203092305938.png" alt="image-20220309230514868"></li></ul></li></ul><h2 id="队列的应用"><a href="#队列的应用" class="headerlink" title="队列的应用"></a>队列的应用</h2><h3 id="树的层次遍历"><a href="#树的层次遍历" class="headerlink" title="树的层次遍历"></a>树的层次遍历</h3><ul><li><img src="https://pic.chjm.cloud//picgo/202203092305471.png" alt="image-20220309230520449"></li></ul><h3 id="图的广度优先遍历"><a href="#图的广度优先遍历" class="headerlink" title="图的广度优先遍历"></a>图的广度优先遍历</h3><ul><li><img src="https://pic.chjm.cloud//picgo/202203092305729.png" alt="image-20220309230524702"></li></ul><h3 id="队列在操作系统中的应用"><a href="#队列在操作系统中的应用" class="headerlink" title="队列在操作系统中的应用"></a>队列在操作系统中的应用</h3><ul><li><img src="https://pic.chjm.cloud//picgo/202203092305031.png" alt="image-20220309230528980"></li><li><img src="https://pic.chjm.cloud//picgo/202203092305954.png" alt="image-20220309230535917"></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 数据结构 </category>
+          
+      </categories>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>第一章 绪论</title>
       <link href="/2022/02/21/%E7%BB%AA%E8%AE%BA/"/>
       <url>/2022/02/21/%E7%BB%AA%E8%AE%BA/</url>
