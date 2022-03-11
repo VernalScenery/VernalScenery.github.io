@@ -4,6 +4,25 @@
   
     
     <entry>
+      <title>串</title>
+      <link href="/2022/03/11/%E4%B8%B2/"/>
+      <url>/2022/03/11/%E4%B8%B2/</url>
+      
+        <content type="html"><![CDATA[<h1 id="串"><a href="#串" class="headerlink" title="串"></a>串</h1><h2 id="串的定义"><a href="#串的定义" class="headerlink" title="串的定义"></a>串的定义</h2><blockquote><ol><li>串是一种特殊的线性表，数据元素之间呈线性关系</li><li>串的基本操作，如增删改查等通常以子串为操作对象</li></ol></blockquote><p><img src="https://pic.chjm.cloud//picgo/202203112138772.png" alt="image-20220311213850617"></p><h3 id=""><a href="#" class="headerlink" title=""></a></h3><h2 id="串的存储结构"><a href="#串的存储结构" class="headerlink" title="串的存储结构"></a>串的存储结构</h2><h3 id="顺序存储"><a href="#顺序存储" class="headerlink" title="顺序存储"></a>顺序存储</h3><ul><li><p>定长顺序存储表示</p><p><img src="https://pic.chjm.cloud//picgo/202203112139213.png" alt="image-20220311213940137"></p></li><li><p>堆分配存储表示</p><p><img src="https://pic.chjm.cloud//picgo/202203112139328.png" alt="image-20220311213945248"></p></li><li><p>几种顺序存储方案</p><p><img src="https://pic.chjm.cloud//picgo/202203112139010.png" alt="image-20220311213958892"></p></li></ul><h3 id="链式存储"><a href="#链式存储" class="headerlink" title="链式存储"></a>链式存储</h3><p><img src="https://pic.chjm.cloud//picgo/202203112140440.png" alt="image-20220311214016338"></p><h2 id="串的基本操作"><a href="#串的基本操作" class="headerlink" title="串的基本操作"></a>串的基本操作</h2><p>串的基本操作如下：</p><p><img src="https://pic.chjm.cloud//picgo/202203112140997.png" alt="image-20220311214029906"></p><ul><li><p>SubString ( &amp;Sub，S，pos，len )：求子串；用 Sub 返回串 S 的第 pos 个字符起长度为 len 的子串</p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 截取str字符串从pos位置len长度的字符到deststr中</span></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">SubString</span><span class="params">(DyString *deststr, DyString *str, <span class="keyword">int</span> pos, <span class="keyword">int</span> len)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    InitString(deststr);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        deststr-&gt;ch[i] = str-&gt;ch[i + pos - <span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    deststr-&gt;length = len;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li><li><p>Index(S,T)：定位操作；若主串 S 中存在与串 T 值相同的子串，则返回它在主串 S 中第一次出现的位置；否则函数值为 0</p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 返回子串child在父串parent中的位置</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Index</span><span class="params">(DyString *parent, DyString *child)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    DyString *str = (DyString *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(DyString));</span><br><span class="line">    InitString(str);</span><br><span class="line">    <span class="keyword">int</span> len = child-&gt;length;</span><br><span class="line">    <span class="keyword">int</span> pos = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (pos + len &lt;= parent-&gt;length)</span><br><span class="line">    &#123;</span><br><span class="line">        SubString(str, parent, pos + <span class="number">1</span>, len);</span><br><span class="line">        <span class="keyword">if</span> (!StrCompare(str, child))</span><br><span class="line">            <span class="keyword">return</span> pos + <span class="number">1</span>;</span><br><span class="line">        pos++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li><li><p>StrCompare(S，T)：比较操作；若 S&gt;T，则返回值&gt;0；若 S=T，则返回值=0；若 S&lt;T，则返回值&lt;0</p><p><img src="https://pic.chjm.cloud//picgo/202203112148277.png" alt="image-20220311214834155"></p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 比较两个字符串的大小str1 == str2 返回0 ；str1&lt;str2 返回负数；str1&gt; str2 返回正数</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">StrCompare</span><span class="params">(DyString *str1, DyString *str2)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; str1-&gt;length &amp;&amp; i &lt; str2-&gt;length; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//相等的字符跳过，直到不等的字符</span></span><br><span class="line">        <span class="keyword">if</span> (str1-&gt;ch[i] != str2-&gt;ch[i])</span><br><span class="line">            <span class="keyword">return</span> str1-&gt;ch[i] - str2-&gt;ch[i]; <span class="comment">//返回正数和负数</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//字符都相等，比较字符串的长度</span></span><br><span class="line">    <span class="keyword">return</span> str1-&gt;length - str2-&gt;length;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 数据结构 </category>
+          
+      </categories>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>矩阵的压缩存储</title>
       <link href="/2022/03/10/%E7%9F%A9%E9%98%B5%E7%9A%84%E5%8E%8B%E7%BC%A9%E5%AD%98%E5%82%A8/"/>
       <url>/2022/03/10/%E7%9F%A9%E9%98%B5%E7%9A%84%E5%8E%8B%E7%BC%A9%E5%AD%98%E5%82%A8/</url>
@@ -52,25 +71,6 @@
       <categories>
           
           <category> 数据结构 </category>
-          
-      </categories>
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>第一章 函数 极限 连续</title>
-      <link href="/2022/02/03/%E8%BF%9E%E7%BB%AD/"/>
-      <url>/2022/02/03/%E8%BF%9E%E7%BB%AD/</url>
-      
-        <content type="html"><![CDATA[<h1 id="第一章-函数-极限-连续"><a href="#第一章-函数-极限-连续" class="headerlink" title="第一章 函数 极限 连续"></a>第一章 函数 极限 连续</h1><h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><ul><li><p>两个基本要素<br>(是否为同一函数)</p><ul><li>定义域</li><li>对应规则</li></ul></li><li><p>两个特殊函数</p><ul><li><p>符号函数</p><ul><li><img src="https://pic.chjm.cloud//picgo/202202031950173.png" alt="image-20220203195044094"></li></ul></li><li><p>取整函数</p><ul><li><img src="https://pic.chjm.cloud//picgo/202202031950216.png" alt="image-20220203195051164"></li></ul></li></ul></li><li><p>复合函数</p><ul><li>内函数值域为外函数定义域</li></ul></li><li><p>反函数</p><ul><li>逆运算</li><li>一 一 映射</li><li>单调函数一定为反函数，但反之不然</li></ul></li><li><p>初等函数</p><ul><li>幂函数</li><li>指数函数</li><li>对数函数</li><li>三角函数</li><li>反三角函数</li></ul></li></ul><h3 id="性质"><a href="#性质" class="headerlink" title="性质"></a>性质</h3><ul><li>单调性</li><li>奇偶性</li><li>周期性</li><li>有界性</li></ul><h2 id="极限"><a href="#极限" class="headerlink" title="极限"></a>极限</h2><h3 id="概念-1"><a href="#概念-1" class="headerlink" title="概念"></a>概念</h3><ul><li><p>数列的极限</p><ul><li>def 细节</li></ul></li><li><p>函数的极限</p><ul><li><p>自变量趋于无穷大时函数的极限</p><ul><li>正负无穷大</li></ul></li><li><p>自变量趋于有限值时函数的极限</p><ul><li><img src="https://pic.chjm.cloud//picgo/202202031950086.png" alt="image-20220203195013943"></li><li>左右极限</li></ul></li></ul></li></ul><h3 id="性质-1"><a href="#性质-1" class="headerlink" title="性质"></a>性质</h3><ul><li><p>有界限</p></li><li><p>保号性</p><ul><li>注意等于号</li></ul></li><li><p>极限值与无穷小之间的关系</p></li></ul><h3 id="极限的存在准则"><a href="#极限的存在准则" class="headerlink" title="极限的存在准则"></a>极限的存在准则</h3><ul><li><p>夹逼准则</p><ul><li>不带等号也可以</li></ul></li><li><p>单调有界准则</p></li></ul><h3 id="无穷小量"><a href="#无穷小量" class="headerlink" title="无穷小量"></a>无穷小量</h3><ul><li>概念</li><li>比较</li><li>性质</li></ul><h3 id="无穷大量"><a href="#无穷大量" class="headerlink" title="无穷大量"></a>无穷大量</h3><ul><li>概念</li><li>比较</li><li>性质</li><li>无穷大量与无界变量的关系</li><li>无穷大量与无穷小量的关系</li></ul>]]></content>
-      
-      
-      <categories>
-          
-          <category> 高数基础班 </category>
           
       </categories>
       
