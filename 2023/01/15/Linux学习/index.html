@@ -1,0 +1,1748 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Linux学习 | 春和景明的记事本</title><meta name="keywords" content="博客"><meta name="author" content="Scenery"><meta name="copyright" content="Scenery"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Linux 基础课文件系统1.文件结构(1) &#x2F; 根目录 bin 可执行文件(2) etc 配置文件(3) var&#x2F;log 日志(4) lib 头文件、各种库(5) home&#x2F;acs 用户文件夹(6) proc 进程相关的信息 2.路径问题(1) .&#x2F; 是当前目录(2) ..&#x2F; 是上一级目录(3) &#x2F; 是根目录(4) ~&#x2F; 是家目录（即用户目录） 3.常用文件管理命令 ctrl c : 取消命令，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux学习">
+<meta property="og:url" content="https://vernalscenery.github.io/2023/01/15/Linux%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:site_name" content="春和景明的记事本">
+<meta property="og:description" content="Linux 基础课文件系统1.文件结构(1) &#x2F; 根目录 bin 可执行文件(2) etc 配置文件(3) var&#x2F;log 日志(4) lib 头文件、各种库(5) home&#x2F;acs 用户文件夹(6) proc 进程相关的信息 2.路径问题(1) .&#x2F; 是当前目录(2) ..&#x2F; 是上一级目录(3) &#x2F; 是根目录(4) ~&#x2F; 是家目录（即用户目录） 3.常用文件管理命令 ctrl c : 取消命令，">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://vernalscenery.github.io/img/1.jpg">
+<meta property="article:published_time" content="2023-01-15T08:19:19.000Z">
+<meta property="article:modified_time" content="2023-03-17T01:05:46.000Z">
+<meta property="article:author" content="Scenery">
+<meta property="article:tag" content="博客">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://vernalscenery.github.io/img/1.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://vernalscenery.github.io/2023/01/15/Linux%E5%AD%A6%E4%B9%A0/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Linux学习',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-03-17 09:05:46'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/style.css"><meta name="generator" content="Hexo 5.4.2"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/./img/1.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">5</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/./img/1.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">春和景明的记事本</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Linux学习</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-01-15T08:19:19.000Z" title="发表于 2023-01-15 16:19:19">2023-01-15</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-03-17T01:05:46.000Z" title="更新于 2023-03-17 09:05:46">2023-03-17</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9B%B8%E5%85%B3/">服务器相关</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">19.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>69分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Linux学习"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Linux-基础课"><a href="#Linux-基础课" class="headerlink" title="Linux 基础课"></a>Linux 基础课</h1><h2 id="文件系统"><a href="#文件系统" class="headerlink" title="文件系统"></a>文件系统</h2><h3 id="1-文件结构"><a href="#1-文件结构" class="headerlink" title="1.文件结构"></a>1.文件结构</h3><p>(1) / 根目录 bin 可执行文件<br>(2) etc 配置文件<br>(3) var/log 日志<br>(4) lib 头文件、各种库<br>(5) home/acs 用户文件夹<br>(6) proc 进程相关的信息</p>
+<h3 id="2-路径问题"><a href="#2-路径问题" class="headerlink" title="2.路径问题"></a>2.路径问题</h3><p>(1) ./ 是当前目录<br>(2) ../ 是上一级目录<br>(3) / 是根目录<br>(4) ~/ 是家目录（即用户目录）</p>
+<h3 id="3-常用文件管理命令"><a href="#3-常用文件管理命令" class="headerlink" title="3.常用文件管理命令"></a>3.常用文件管理命令</h3><ol>
+<li><p>ctrl c : 取消命令，并且换行</p>
+</li>
+<li><p>ctrl u : 清空本行命令</p>
+</li>
+<li><p>history : 输出历史输入命令</p>
+</li>
+<li><p>方向键 ↑ 是输入上一次输入的命令</p>
+</li>
+<li><p>tab 键 ：可以补全命令和文件名，如果补全不了快速按两下 tab 键，可以显示备选选项</p>
+</li>
+<li><p>ls : 列出当前目录下所有文件，蓝色的是文件夹，白色的是普通文件，绿色的是可执行文件</p>
+<blockquote>
+<p>ls -l : 查看所有文件信息<br>ls -lh : 文件信息 30952-&gt;31k 更加人性化<br>ls -a : 查看以点开头的隐藏文件</p>
+</blockquote>
+</li>
+<li><p>cd XXX : 进入 XXX 目录下。</p>
+<ul>
+<li>cd .. 返回上层目录</li>
+<li>cd - 返回上一个待过的目录</li>
+</ul>
+</li>
+<li><p>find a : 展示 a 文件夹里有啥</p>
+</li>
+<li><p>cat XXX : 展示文件 XXX 中的内容 只能看文件的内容 不能看文件夹</p>
+</li>
+<li><p>pwd : 显示当前路径</p>
+</li>
+<li><p>cp XXX YYY : 将 XXX 文件复制成 YYY，XXX 和 YYY 可以是一个路径，</p>
+<blockquote>
+<p>eg1: cp a/tmp.txt b/ 就是将 a 文件夹下的 tmp.txt 移动到 b 文件夹下并命名为 tmp.txt<br>eg2: cp a/tmp.txt b/tmp2.txt 就是将 a 文件夹下的 tmp.txt 移动到 b 文件夹下并命名为 tmp2.txt<br>eg3: cp a b -r 将 a 整个文件夹复制到 b 文件夹里 (当前文件夹内有 b 文件夹）<br>eg4: cp a c -r 将 a 在当前文件夹以 c 为命名重新复制一份 (当前文件夹内无 c 文件夹）</p>
+</blockquote>
+</li>
+<li><p>mv XXX YYY : 将 XXX 文件移动到 YYY，和 cp 命令一样，XXX 和 YYY 可以是一个路径；<strong>重命名</strong>也是用这个命令</p>
+<blockquote>
+<p>eg1: mv a/tmp.txt b/ 只移动</p>
+<p>eg2: mv a/tmp.txt b/tmp2.txt 移动加重命名</p>
+<p>eg3: mv tmp.txt tmp2.txt 只重命名</p>
+</blockquote>
+</li>
+<li><p>mkdir XXX : 创建文件夹</p>
+<blockquote>
+<p>eg1: mkdir /home/acs/a/b 以绝对路径的方式在 a 文件夹内创建 b 文件夹(home,acs,a 文件夹都存在)</p>
+<p>eg2 mkdir a/b/c/d -p 在 a 文件夹下连续创建嵌套的 b,c,d 文件夹 任意一层存在了则跳过创建</p>
+</blockquote>
+</li>
+<li><p>touch XXX : 创建一个文件</p>
+</li>
+<li><p>rm XXX : 删除普通文件; rm XXX -r: 删除文件夹</p>
+<blockquote>
+<p>eg1: rm t1.txt t2.txt 删除两个文件 支持正则表达式 即 rm t1.txt t2.txt -&gt; rm *.txt</p>
+<p>eg2: rm a/* 删除 a 文件夹下所有的东西 但不删除 a 文件夹</p>
+</blockquote>
+</li>
+<li><p>复制文本<br>windows/Linux 下：Ctrl + insert，Mac 下：command + c</p>
+</li>
+<li><p>粘贴文本<br>windows/Linux 下：Shift + insert，Mac 下：command + v</p>
+</li>
+</ol>
+<h2 id="Tmux"><a href="#Tmux" class="headerlink" title="Tmux"></a>Tmux</h2><h3 id="1-功能"><a href="#1-功能" class="headerlink" title="1.功能"></a>1.功能</h3><ol>
+<li>分屏。</li>
+<li>允许断开 Terminal 连接后，继续运行进程。</li>
+</ol>
+<h3 id="2-结构"><a href="#2-结构" class="headerlink" title="2.结构"></a>2.结构</h3><ul>
+<li><p>一个 tmux 可以包含多个 session，一个 session 可以包含多个 window，一个 window 可以包含多个 pane，每个 pane 都可以打开一个 shell 对话框</p>
+<blockquote>
+<p>tmux：<br>session 0：<br>window 0：<br>pane 0<br>pane 1<br>pane 2<br>…<br>window 1<br>window 2<br>…<br>session 1<br>session 2<br>…</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="3-操作"><a href="#3-操作" class="headerlink" title="3.操作"></a>3.操作</h3><ol>
+<li><p>tmux：新建一个 session，其中包含一个 window，window 中包含一个 pane，pane 里打开了一个 shell 对话框。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 启动tmux 默认为自增的编号</span></span><br><span class="line">tmux</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动命名tmux</span></span><br><span class="line">tmux new -s &lt;name&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 可看到当前所有的tmux伪窗口</span></span><br><span class="line">tmux ls <span class="comment"># 注意一个每个用户的tmux列表是不互通的</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 退出tmux伪窗口</span></span><br><span class="line">tmux detach</span><br><span class="line"></span><br><span class="line"><span class="comment"># 重接会话</span></span><br><span class="line">tmux attach -t 0  <span class="comment"># 使用伪窗口编号</span></span><br><span class="line">tmux attach -t xiaoqi <span class="comment"># 使用伪窗口名称</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 杀死对话</span></span><br><span class="line">tmux kill-session -t 0 <span class="comment"># 使用会话编号</span></span><br><span class="line">tmux kill-session -t &lt;name&gt; <span class="comment"># 使用会话名称</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 切换会话</span></span><br><span class="line">tmux switch -t 0 <span class="comment"># 使用会话编号</span></span><br><span class="line">tmux switch -t &lt;session-name&gt; <span class="comment"># 使用会话名称</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 重命名会话</span></span><br><span class="line">tmux rename-session -t 0 &lt;new-name&gt; <span class="comment"># 使用会话编号</span></span><br></pre></td></tr></table></figure></li>
+<li><p>按下 Ctrl + a 后手指松开，然后按%：将当前 pane 左右平分成两个 pane。</p>
+</li>
+<li><p>按下 Ctrl + a 后手指松开，然后按”（注意是双引号”）：将当前 pane 上下平分成两个 pane。</p>
+</li>
+<li><p>Ctrl + d：关闭当前 pane；如果当前 window 的所有 pane 均已关闭，则自动关闭 window；如果当前 session 的所有 window 均已关闭，则自动关闭 session。</p>
+</li>
+<li><p>鼠标点击可以选 pane。</p>
+</li>
+<li><p>按下 ctrl + a 后手指松开，然后按方向键：选择相邻的 pane。</p>
+</li>
+<li><p>鼠标拖动 pane 之间的分割线，可以调整分割线的位置。</p>
+</li>
+<li><p>按住 ctrl + a 的同时按方向键，可以调整 pane 之间分割线的位置。</p>
+</li>
+<li><p>按下 ctrl + a 后手指松开，然后按 z：将当前 pane 全屏/取消全屏。</p>
+</li>
+<li><p>按下 ctrl + a 后手指松开，然后按 d：挂起当前 session。</p>
+</li>
+<li><p>tmux a：打开之前挂起的 session。</p>
+</li>
+<li><p>按下 ctrl + a 后手指松开，然后按 s：选择其它 session。</p>
+</li>
+</ol>
+<blockquote>
+<p>方向键 —— 上：选择上一项 session/window/pane<br>方向键 —— 下：选择下一项 session/window/pane<br>方向键 —— 右：展开当前项 session/window<br>方向键 —— 左：闭合当前项 session/window</p>
+</blockquote>
+<ol start="13">
+<li><p>按下 Ctrl + a 后手指松开，然后按 c：在当前 session 中创建一个新的 window。</p>
+</li>
+<li><p>按下 Ctrl + a 后手指松开，然后按 w：选择其他 window，操作方法与(12)完全相同。</p>
+</li>
+<li><p>按下 Ctrl + a 后手指松开，然后按 PageUp：翻阅当前 pane 内的内容。</p>
+</li>
+<li><p>鼠标滚轮：翻阅当前 pane 内的内容。</p>
+</li>
+<li><p>在 tmux 中选中文本时，需要按住 shift 键。（仅支持 Windows 和 Linux，不支持 Mac，不过该操作并不是必须的，因此影响不大）</p>
+<blockquote>
+<p>:set nonu 删除行号</p>
+<p>shift + 鼠标选择内容</p>
+<p>Ctrl + insert 复制选中内容</p>
+<p>:set paste 进入粘贴模式</p>
+<p>i 进入编辑模式</p>
+<p>Shift + insert 粘贴内容</p>
+</blockquote>
+</li>
+<li><p>tmux 中复制/粘贴文本的通用方式：</p>
+</li>
+</ol>
+<blockquote>
+<p>(1) 按下 Ctrl + a 后松开手指，然后按[</p>
+<blockquote>
+<p>(2) 用鼠标选中文本，被选中的文本会被自动复制到 tmux 的剪贴板<br>(3) 按下 Ctrl + a 后松开手指，然后按]，会将剪贴板中的内容粘贴到光标处</p>
+</blockquote>
+</blockquote>
+<ol start="19">
+<li><p>关闭对话</p>
+<blockquote>
+<p>使用会话编号或名称</p>
+<p>tmux kill-session -t 0<br>tmux kill-session -t <session-name></p>
+</blockquote>
+</li>
+</ol>
+<h2 id="Vim"><a href="#Vim" class="headerlink" title="Vim"></a>Vim</h2><h3 id="1-功能-1"><a href="#1-功能-1" class="headerlink" title="1.功能"></a>1.功能</h3><ol>
+<li><p>命令行模式下的文本编辑器。</p>
+</li>
+<li><p>根据文件扩展名自动判别编程语言。支持代码缩进、代码高亮等功能。</p>
+</li>
+<li><p>使用方式：vim filename</p>
+<blockquote>
+<p>如果已有该文件，则打开它。<br>如果没有该文件，则打开个一个新的文件，并命名为 filename</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="2-模式"><a href="#2-模式" class="headerlink" title="2.模式"></a>2.模式</h3><p>(1) 一般命令模式<br>默认模式。命令输入方式：类似于打游戏放技能，按不同字符，即可进行不同操作。可以复制、粘贴、删除文本等。<br>(2) 编辑模式<br>在一般命令模式里按下 i，会进入编辑模式。<br>按下 ESC 会退出编辑模式，返回到一般命令模式。<br>(3) 命令行模式<br>在一般命令模式里按下:/?三个字母中的任意一个，会进入命令行模式。命令行在最下面。<br>可以查找、替换、保存、退出、配置编辑器等。</p>
+<h3 id="3-操作-1"><a href="#3-操作-1" class="headerlink" title="3.操作"></a>3.操作</h3><ol>
+<li><p>i：进入编辑模式</p>
+</li>
+<li><p>ESC：进入一般命令模式</p>
+</li>
+<li><p>h 或 左箭头键：光标向左移动一个字符</p>
+</li>
+<li><p>j 或 向下箭头：光标向下移动一个字符</p>
+</li>
+<li><p>k 或 向上箭头：光标向上移动一个字符</p>
+</li>
+<li><p>l 或 向右箭头：光标向右移动一个字符</p>
+</li>
+<li><p>n&lt;Space&gt;：n 表示数字，按下数字后再按空格，光标会向右移动这一行的 n 个字符</p>
+</li>
+<li><p>0 或 功能键[Home]：光标移动到本行开头</p>
+</li>
+<li><p>$ 或 功能键[End]：光标移动到本行末尾</p>
+</li>
+<li><p>G：光标移动到最后一行</p>
+</li>
+<li><p>:n 或 nG ：n 为数字，光标移动到第 n 行 :即进入命令行模式</p>
+</li>
+<li><p>gg：光标移动到第一行，相当于 1G</p>
+</li>
+<li><p>n&lt;Enter&gt;：n 为数字，光标向下移动 n 行</p>
+</li>
+<li><p>/word：向光标之下寻找第一个值为 word 的字符串。</p>
+</li>
+<li><p>?word：向光标之上寻找第一个值为 word 的字符串。</p>
+</li>
+<li><p>n：重复前一个查找操作 往后找</p>
+</li>
+<li><p>N：反向重复前一个查找操作 往前找</p>
+</li>
+<li><p>:n1,n2s/word1/word2/g：n1 与 n2 为数字，在第 n1 行与 n2 行之间寻找 word1 这个字符串，并将该字符串替换为 word2</p>
+<blockquote>
+<p>eg: :5,7s/int/double/g 是将 5 到 7 行的 int 替换为 double</p>
+</blockquote>
+</li>
+<li><p>:1,$s/word1/word2/g：将全文的 word1 替换为 word</p>
+</li>
+<li><p>:1,$s/word1/word2/gc：将全文的 word1 替换为 word2，且在<strong>每次替换前</strong>要求用户确认。</p>
+</li>
+<li><p>v：选中文本</p>
+</li>
+<li><p>d：删除选中的文本</p>
+</li>
+<li><p>dd: 删除当前行 带剪贴功能</p>
+</li>
+<li><p>y：复制选中的文本</p>
+</li>
+<li><p>yy: 复制当前行</p>
+</li>
+<li><p>p: 将复制的数据在光标的下一行/下一个位置粘贴</p>
+</li>
+<li><p>u：撤销</p>
+</li>
+<li><p>Ctrl + r：取消撤销</p>
+</li>
+<li><p>Ctrl + z：挂起</p>
+</li>
+<li><p>fg: 恢复挂起</p>
+</li>
+<li><p>大于号 &gt;：将选中的文本整体向右缩进一次</p>
+</li>
+<li><p>小于号 &lt;：将选中的文本整体向左缩进一次</p>
+</li>
+<li><p>:w 保存</p>
+</li>
+<li><p>:w! 强制保存</p>
+</li>
+<li><p>:q 退出</p>
+</li>
+<li><p>:q! 强制退出</p>
+</li>
+<li><p>:wq 保存并退出</p>
+</li>
+<li><p>:set paste 设置成粘贴模式，取消代码自动缩进</p>
+</li>
+<li><p>:set nopaste 取消粘贴模式，开启代码自动缩进</p>
+<blockquote>
+<p>粘贴代码前先设置成粘贴模式，<br>粘贴成功后再取消粘贴模式</p>
+</blockquote>
+</li>
+<li><p>:set nu 显示行号</p>
+</li>
+<li><p>:set nonu 隐藏行号</p>
+</li>
+<li><p>:noh 关闭查找关键词高亮</p>
+</li>
+<li><p>Ctrl + q：当 vim 卡死时，可以取消当前正在执行的命令</p>
+</li>
+</ol>
+<h4 id="3-1-连招"><a href="#3-1-连招" class="headerlink" title="3.1 连招"></a>3.1 连招</h4><ol>
+<li>gg d G：删除全部</li>
+<li>gg = G：将全文代码格式化</li>
+</ol>
+<h3 id="4-异常处理"><a href="#4-异常处理" class="headerlink" title="4 .异常处理"></a>4 .异常处理</h3><p>每次用 vim 编辑文件时，会自动创建一个.filename.swp 的临时文件。<br>如果打开某个文件时，该文件的 swp 文件已存在，则会报错。此时解决办法有两种：</p>
+<blockquote>
+<p>(1) 找到正在打开该文件的程序，并退出<br>(2) 直接删掉该 swp 文件即可</p>
+</blockquote>
+<h2 id="shell-语法"><a href="#shell-语法" class="headerlink" title="shell 语法"></a>shell 语法</h2><h3 id="1-概论"><a href="#1-概论" class="headerlink" title="1.概论"></a>1.概论</h3><p>shell 是我们通过命令行与操作系统沟通的语言。</p>
+<p>shell 脚本可以直接在命令行中执行，也可以将一套逻辑组织成一个文件，方便复用。</p>
+<p>Linux 中常见的 shell 脚本有很多种，常见的有：</p>
+<blockquote>
+<p>Bourne Shell(/usr/bin/sh 或/bin/sh)<br>Bourne Again Shell(/bin/bash)<br>C Shell(/usr/bin/csh)<br>K Shell(/usr/bin/ksh)<br>zsh<br>…</p>
+</blockquote>
+<h4 id="1-1-脚本示例"><a href="#1-1-脚本示例" class="headerlink" title="1.1 脚本示例"></a>1.1 脚本示例</h4><p>新建一个 test.sh 文件，内容如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#! /bin/bash  # 文件开头需要写#! /bin/bash，指明bash为脚本解释器。</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Hello World!&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="1-2-运行方式"><a href="#1-2-运行方式" class="headerlink" title="1.2 运行方式"></a>1.2 运行方式</h4><ul>
+<li><p>作为可执行文件</p>
+<blockquote>
+<p>ls -l test.sh 查看文件信息</p>
+<p>-rw-rw-r– 1 acs acs 33 sep 1 20:16 test.sh</p>
+<p>r（Read，读取权限）<br>w（Write，写入权限）<br>x（eXecute，执行权限）</p>
+<p>前三个 -rw：本人的权限</p>
+<p>中间三个 -rw：同组的权限</p>
+<p>后三个 r–：其他用户的权限</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">acs@9e0ebfcd82d7:~$ chmod +x test.sh  <span class="comment"># 使脚本具有可执行权限</span></span><br><span class="line"><span class="comment"># 三种运行方式</span></span><br><span class="line">acs@9e0ebfcd82d7:~$ ./test.sh  <span class="comment"># 当前路径下执行</span></span><br><span class="line">Hello World!  <span class="comment"># 脚本输出</span></span><br><span class="line">acs@9e0ebfcd82d7:~$ /home/acs/test.sh  <span class="comment"># 绝对路径下执行</span></span><br><span class="line">Hello World!  <span class="comment"># 脚本输出</span></span><br><span class="line">acs@9e0ebfcd82d7:~$ ~/test.sh  <span class="comment"># 家目录路径下执行</span></span><br><span class="line">Hello World!  <span class="comment"># 脚本输出</span></span><br></pre></td></tr></table></figure></li>
+<li><p>用解释器执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">acs@9e0ebfcd82d7:~$ bash test.sh</span><br><span class="line">Hello World!  <span class="comment"># 脚本输出</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="2-注释"><a href="#2-注释" class="headerlink" title="2. 注释"></a>2. 注释</h3><h4 id="2-1-单行注释"><a href="#2-1-单行注释" class="headerlink" title="2.1 单行注释"></a>2.1 单行注释</h4><p>每行中#之后的内容均是注释。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 这是一行注释</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;Hello World&#x27;</span>  <span class="comment">#  这也是注释</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="2-1-多行注释"><a href="#2-1-多行注释" class="headerlink" title="2.1 多行注释"></a>2.1 多行注释</h4><p>格式：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">:&lt;&lt;<span class="string">EOF</span></span><br><span class="line"><span class="string">第一行注释</span></span><br><span class="line"><span class="string">第二行注释</span></span><br><span class="line"><span class="string">第三行注释</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure>
+
+<p>其中 EOF 可以换成其它任意字符串。例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">:&lt;&lt;<span class="string">abc</span></span><br><span class="line"><span class="string">第一行注释</span></span><br><span class="line"><span class="string">第二行注释</span></span><br><span class="line"><span class="string">第三行注释</span></span><br><span class="line"><span class="string">abc</span></span><br><span class="line"></span><br><span class="line">:&lt;&lt;!</span><br><span class="line">第一行注释</span><br><span class="line">第二行注释</span><br><span class="line">第三行注释</span><br><span class="line">!</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-变量"><a href="#3-变量" class="headerlink" title="3. 变量"></a>3. 变量</h3><h4 id="3-1-定义变量"><a href="#3-1-定义变量" class="headerlink" title="3.1 定义变量"></a>3.1 定义变量</h4><p>定义变量，不需要加$符号，例如：</p>
+<blockquote>
+<p>注意等号两边不能有空格</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">name1=&#x27;yxc&#x27;  # 单引号定义字符串</span><br><span class="line">name2=&quot;yxc&quot;  # 双引号定义字符串</span><br><span class="line">name3=yxc    # 也可以不加引号，同样表示字符串</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-2-使用变量"><a href="#3-2-使用变量" class="headerlink" title="3.2 使用变量"></a>3.2 使用变量</h4><p>使用变量，需要加上$符号，或者${}符号。花括号是可选的，主要为了帮助解释器识别变量边界。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">name=yxc</span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$name</span>  <span class="comment"># 输出yxc</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;name&#125;</span>  <span class="comment"># 输出yxc</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;name&#125;</span>acwing  <span class="comment"># 输出yxcacwing</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="3-3-只读变量"><a href="#3-3-只读变量" class="headerlink" title="3.3 只读变量"></a>3.3 只读变量</h4><p>使用<strong>readonly</strong>或者<strong>declare</strong>可以将变量变为只读。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">name=yxc</span><br><span class="line"><span class="built_in">readonly</span> name</span><br><span class="line"><span class="built_in">declare</span> -r name  <span class="comment"># 两种写法均可</span></span><br><span class="line"></span><br><span class="line">name=abc  <span class="comment"># 会报错，因为此时name只读</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="3-4-删除变量"><a href="#3-4-删除变量" class="headerlink" title="3.4 删除变量"></a>3.4 删除变量</h4><p><strong>unset</strong>可以删除变量。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">name=yxc</span><br><span class="line"><span class="built_in">unset</span> name</span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$name</span>  <span class="comment"># 输出空行  不存在的变量即为空行</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="3-5-变量类型"><a href="#3-5-变量类型" class="headerlink" title="3.5 变量类型"></a>3.5 变量类型</h4><ol>
+<li><p>自定义变量（局部变量）<br>子进程不能访问的变量</p>
+</li>
+<li><p>环境变量（全局变量）<br>子进程可以访问的变量</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">acs@9e0ebfcd82d7:bash   <span class="comment">#  可以直接开一个子进程</span></span><br><span class="line">acs@9e0ebfcd82d7:<span class="built_in">exit</span>     <span class="comment">#  退出当前子进程</span></span><br><span class="line">acs@9e0ebfcd82d7:top      <span class="comment">#  查看当前所有进程</span></span><br><span class="line">acs@9e0ebfcd82d7: pstree [选项]   <span class="comment"># 以树状的形式展示进程信息</span></span><br><span class="line">acs@9e0ebfcd82d7:q          <span class="comment"># 退出查看当前所有进程</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>shift + F 进程列表按内存排序</p>
+</blockquote>
+<p><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/image-20230120103502124.png" alt="image-20230120103502124"></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">acs@9e0ebfcd82d7: <span class="built_in">kill</span> [参数] 进程号    <span class="comment"># []代表可选</span></span><br><span class="line">acs@9e0ebfcd82d7: killall [参数] 进程名称</span><br></pre></td></tr></table></figure>
+
+<p>常用参数： -9 表示强制结束进程</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">kill</span> 6804   <span class="comment"># 结束id为6804的进程</span></span><br><span class="line">killall sshd   <span class="comment"># 结束所有名为sshd的进程</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>自定义变量改成环境变量：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">acs@9e0ebfcd82d7:~$ name=yxc  <span class="comment"># 定义变量</span></span><br><span class="line">acs@9e0ebfcd82d7:~$ <span class="built_in">export</span> name  <span class="comment"># 第一种方法</span></span><br><span class="line">acs@9e0ebfcd82d7:~$ <span class="built_in">declare</span> -x name  <span class="comment"># 第二种方法</span></span><br></pre></td></tr></table></figure>
+
+<p>环境变量改为自定义变量：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">acs@9e0ebfcd82d7:~$ <span class="built_in">export</span> name=yxc  <span class="comment"># 定义环境变量</span></span><br><span class="line">acs@9e0ebfcd82d7:~$ <span class="built_in">declare</span> +x name  <span class="comment"># 改为自定义变量</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="3-6-字符串"><a href="#3-6-字符串" class="headerlink" title="3.6 字符串"></a>3.6 字符串</h4><p>字符串可以用单引号，也可以用双引号，也可以不用引号。</p>
+<p><strong>单引号与双引号的区别</strong>：</p>
+<ul>
+<li>单引号中的内容会原样输出，不会执行、不会取变量；</li>
+<li>双引号中的内容可以执行、可以取变量；</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">name=yxc  <span class="comment"># 不用引号</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;hello, $name \&quot;hh\&quot;&#x27;</span>  <span class="comment"># 单引号字符串，输出 hello, $name \&quot;hh\&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;hello, <span class="variable">$name</span> \&quot;hh\&quot;&quot;</span>  <span class="comment"># 双引号字符串，输出 hello, yxc &quot;hh&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>获取字符串长度</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">name=<span class="string">&quot;yxc&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;#name&#125;</span>  <span class="comment"># 输出3</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>提取子串</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">name=<span class="string">&quot;hello, yxc&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;name:0:5&#125;</span>  <span class="comment"># 提取从0开始的5个字符</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="3-7-默认变量"><a href="#3-7-默认变量" class="headerlink" title="3.7 默认变量"></a>3.7 默认变量</h4><p>在执行 shell 脚本时，可以向脚本传递参数。$1 是第一个参数，$2 是第二个参数，以此类推。特殊的，$0 是文件名（包含路径）。例如：</p>
+<p>创建文件 test.sh：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#! /bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;文件名：&quot;</span><span class="variable">$0</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;第一个参数：&quot;</span><span class="variable">$1</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;第二个参数：&quot;</span><span class="variable">$2</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;第三个参数：&quot;</span><span class="variable">$3</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;第四个参数：&quot;</span><span class="variable">$4</span></span><br><span class="line">...................</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;第十个参数：&quot;</span><span class="variable">$&#123;10&#125;</span>  <span class="comment"># 两位需要用&#123;&#125;括上</span></span><br></pre></td></tr></table></figure>
+
+<p>然后执行该脚本：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">acs@9e0ebfcd82d7:~$ chmod +x test.sh</span><br><span class="line">acs@9e0ebfcd82d7:~$ ./test.sh 1 2 3 4 .... 10  <span class="comment"># 执行命令时 可传参 一一对应的关系  eg: 1传参给$1</span></span><br><span class="line">文件名：./test.sh <span class="comment"># 对应执行命令时输入的 ./test.sh</span></span><br><span class="line">第一个参数：1</span><br><span class="line">第二个参数：2</span><br><span class="line">第三个参数：3</span><br><span class="line">第四个参数：4</span><br><span class="line">.........</span><br><span class="line">第十个参数：10</span><br></pre></td></tr></table></figure>
+
+<p>其它参数相关变量</p>
+<p><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/image-20230214095354257.png" alt="image-20230214095354257"></p>
+<blockquote>
+<p>区别：</p>
+<p>1.exit code : 上一条命令的退出状态</p>
+<p>2.$(command) : 获取这条命令的 stdout，即标准输出 command 即为命令</p>
+<p>eg：echo $(ls) 执行脚本时即输出当前目录的文件</p>
+</blockquote>
+<h3 id="4-数组"><a href="#4-数组" class="headerlink" title="4. 数组"></a>4. 数组</h3><p>数组中可以存放多个不同类型的值，只支持一维数组，初始化时不需要指明数组大小。<strong>数组下标从 0 开始</strong></p>
+<h4 id="4-1-定义"><a href="#4-1-定义" class="headerlink" title="4.1 定义"></a>4.1 定义</h4><p>数组用小括号表示，元素之间用空格隔开。例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">array=(1 abc <span class="string">&quot;def&quot;</span> yxc)</span><br></pre></td></tr></table></figure>
+
+<p>也可以直接定义数组中某个元素的值：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">array[0]=1</span><br><span class="line">array[1]=abc</span><br><span class="line">array[2]=<span class="string">&quot;def&quot;</span></span><br><span class="line">array[4]=yxc</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-2-读取数组中某个元素的值"><a href="#4-2-读取数组中某个元素的值" class="headerlink" title="4.2 读取数组中某个元素的值"></a>4.2 读取数组中某个元素的值</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$&#123;array[index]&#125;</span></span><br><span class="line">eg：</span><br><span class="line">array = (1 abc <span class="string">&quot;def&quot;</span> yxc)</span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;array[0]&#125;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;array[1]&#125;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;array[2]&#125;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;array[3]&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="4-3-读取整个数组"><a href="#4-3-读取整个数组" class="headerlink" title="4.3 读取整个数组"></a>4.3 读取整个数组</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$&#123;array[@]&#125;</span>  <span class="comment"># 第一种写法</span></span><br><span class="line"><span class="variable">$&#123;array[*]&#125;</span>  <span class="comment"># 第二种写法</span></span><br><span class="line">eg：</span><br><span class="line">array=(1 abc <span class="string">&quot;def&quot;</span> yxc)</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;array[@]&#125;</span>  <span class="comment"># 第一种写法</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;array[*]&#125;</span>  <span class="comment"># 第二种写法</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="4-4-数组长度"><a href="#4-4-数组长度" class="headerlink" title="4.4 数组长度"></a>4.4 数组长度</h4><p>类似于字符串</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$&#123;#array[@]&#125;</span>  <span class="comment"># 第一种写法</span></span><br><span class="line"><span class="variable">$&#123;#array[*]&#125;</span>  <span class="comment"># 第二种写法</span></span><br><span class="line"></span><br><span class="line">eg:</span><br><span class="line">array[0]=1</span><br><span class="line">array[1]=abc</span><br><span class="line">array[2]=<span class="string">&quot;def&quot;</span></span><br><span class="line">array[1000]=yxc  <span class="comment"># 虽然1000位置赋值了 但是数组长度为4 即数组长度为有效位个数</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;#array[@]&#125;</span>  <span class="comment"># 第一种写法</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$&#123;#array[*]&#125;</span>  <span class="comment"># 第二种写法</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="5-expr-命令"><a href="#5-expr-命令" class="headerlink" title="5. expr 命令"></a>5. expr 命令</h3><p>expr 命令用于求表达式的值，格式为：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">expr 表达式</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>表达式说明：</p>
+<ul>
+<li>用空格隔开每一项</li>
+<li>用反斜杠放在 shell 特定的字符前面（发现表达式运行错误时，可以试试<strong>转义</strong>）</li>
+<li>对包含空格和其他特殊字符的字符串要用<strong>引号</strong>括起来</li>
+<li>expr 会在 stdout 中输出结果。如果为逻辑关系表达式，则结果为真，stdout 为 1，否则为 0。</li>
+<li>expr 同时会在 exit code 返回标识符：如果为逻辑关系表达式，则结果为真，exit code 为 0，否则为 1。</li>
+</ul>
+</blockquote>
+<h4 id="5-1-字符串表达式"><a href="#5-1-字符串表达式" class="headerlink" title="5.1 字符串表达式"></a>5.1 字符串表达式</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">1.length STRING</span><br><span class="line"><span class="comment">#返回STRING的长度</span></span><br><span class="line"></span><br><span class="line">2.index STRING CHARSET</span><br><span class="line"><span class="comment"># CHARSET中任意单个字符在STRING中最前面的字符位置，下标从1开始。如果在STRING中完全不存在CHARSET中的字符，则返回0。</span></span><br><span class="line"></span><br><span class="line">3.substr STRING POSITION LENGTH</span><br><span class="line"><span class="comment"># 返回STRING字符串中从POSITION开始，长度最大为LENGTH的子串。如果POSITION或LENGTH为负数，0或非数值，则返回空字符串。</span></span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">str=<span class="string">&quot;Hello World!&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> `expr length <span class="string">&quot;<span class="variable">$str</span>&quot;</span>`  <span class="comment"># ``不是单引号，表示执行该命令，输出12</span></span><br><span class="line">						   <span class="comment">#  &quot;$str&quot;加&quot;&quot;是防止str的值里有空格</span></span><br><span class="line"><span class="built_in">echo</span> `expr index <span class="string">&quot;<span class="variable">$str</span>&quot;</span> aWd`  <span class="comment"># 输出7，下标从1开始</span></span><br><span class="line"><span class="built_in">echo</span> `expr substr <span class="string">&quot;<span class="variable">$str</span>&quot;</span> 2 3`  <span class="comment"># 输出 ell</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="5-2-整数表达式"><a href="#5-2-整数表达式" class="headerlink" title="5.2 整数表达式"></a>5.2 整数表达式</h4><p>expr 支持普通的算术操作，不支持浮点运算，因为该语言多处理文件，算术表达式优先级低于字符串表达式，高于逻辑关系表达式。</p>
+<ul>
+<li>+ -<br>加减运算。两端参数会转换为整数，如果转换失败则报错。</li>
+</ul>
+<ul>
+<li>/ %<br>乘，除，取模运算。两端参数会转换为整数，如果转换失败则报错。</li>
+</ul>
+<ul>
+<li>() 可以改变优先级，但需要用反斜杠转义</li>
+</ul>
+<p>示例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">a=3</span><br><span class="line">b=4</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> `expr <span class="variable">$a</span> + <span class="variable">$b</span>`  <span class="comment"># 输出7</span></span><br><span class="line"><span class="built_in">echo</span> `expr <span class="variable">$a</span> - <span class="variable">$b</span>`  <span class="comment"># 输出-1</span></span><br><span class="line"><span class="built_in">echo</span> `expr <span class="variable">$a</span> \* <span class="variable">$b</span>`  <span class="comment"># 输出12，*需要转义</span></span><br><span class="line"><span class="built_in">echo</span> `expr <span class="variable">$a</span> / <span class="variable">$b</span>`  <span class="comment"># 输出0，整除</span></span><br><span class="line"><span class="built_in">echo</span> `expr <span class="variable">$a</span> % <span class="variable">$b</span>` <span class="comment"># 输出3</span></span><br><span class="line"><span class="built_in">echo</span> `expr \( <span class="variable">$a</span> + 1 \) \* \( <span class="variable">$b</span> + 1 \)`  <span class="comment"># 输出20，值为(a + 1) * (b + 1)</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="5-3-逻辑关系表达式-（支持短路运算）"><a href="#5-3-逻辑关系表达式-（支持短路运算）" class="headerlink" title="5.3 逻辑关系表达式 （支持短路运算）"></a>5.3 逻辑关系表达式 （支持短路运算）</h4><ul>
+<li>|<br>如果第一个参数非空且非 0，则返回第一个参数的值，否则返回第二个参数的值，但要求第二个参数的值也是非空或非 0，否则返回 0。如果第一个参数是非空或非 0 时，不会计算第二个参数</li>
+<li>&amp;<br>如果两个参数都非空且非 0，则返回第一个参数，否则返回 0。如果第一个参为 0 或为空，则不会计算第二个参数。</li>
+<li>&lt; &lt;= = == != &gt;= &gt;<br>比较两端的参数，如果为 true，则返回 1，否则返回 0。”==”是”=”的同义词。”expr”首先尝试将两端参数转换为整数，并做算术比较，如果转换失败，则按字符集排序规则做字符比较。</li>
+<li>() 可以改变优先级，但需要用反斜杠转义</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">a=3</span><br><span class="line">b=4</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> `expr <span class="variable">$a</span> \&gt; <span class="variable">$b</span>`  <span class="comment"># 输出0，&gt;需要转义</span></span><br><span class="line"><span class="built_in">echo</span> `expr <span class="variable">$a</span> <span class="string">&#x27;&lt;&#x27;</span> <span class="variable">$b</span>`  <span class="comment"># 输出1，也可以将特殊字符用引号引起来</span></span><br><span class="line"><span class="built_in">echo</span> `expr <span class="variable">$a</span> <span class="string">&#x27;&gt;=&#x27;</span> <span class="variable">$b</span>`  <span class="comment"># 输出0</span></span><br><span class="line"><span class="built_in">echo</span> `expr <span class="variable">$a</span> \&lt;\= <span class="variable">$b</span>`  <span class="comment"># 输出1</span></span><br><span class="line"></span><br><span class="line">c=0</span><br><span class="line">d=5</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> `expr <span class="variable">$c</span> \&amp; <span class="variable">$d</span>`  <span class="comment"># 输出0</span></span><br><span class="line"><span class="built_in">echo</span> `expr <span class="variable">$a</span> \&amp; <span class="variable">$b</span>`  <span class="comment"># 输出3</span></span><br><span class="line"><span class="built_in">echo</span> `expr <span class="variable">$c</span> \| <span class="variable">$d</span>`  <span class="comment"># 输出5</span></span><br><span class="line"><span class="built_in">echo</span> `expr <span class="variable">$a</span> \| <span class="variable">$b</span>`  <span class="comment"># 输出3</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="6-read-命令"><a href="#6-read-命令" class="headerlink" title="6. read 命令"></a>6. read 命令</h3><p>read 命令用于从标准输入中读取单行数据。当读到文件结束符时，exit code 为 1，否则为 0。</p>
+<p>参数说明</p>
+<ul>
+<li>-p: 后面可以接提示信息</li>
+<li>-t：后面跟秒数，定义输入字符的等待时间，超过等待时间后会自动忽略此命令</li>
+</ul>
+<p>示例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">acs@9e0ebfcd82d7:~$ <span class="built_in">read</span> name  <span class="comment"># 读入name的值</span></span><br><span class="line">acwing yxc  <span class="comment"># 标准输入</span></span><br><span class="line">acs@9e0ebfcd82d7:~$ <span class="built_in">echo</span> <span class="variable">$name</span>  <span class="comment"># 输出name的值</span></span><br><span class="line">acwing yxc  <span class="comment">#标准输出</span></span><br><span class="line">acs@9e0ebfcd82d7:~$ <span class="built_in">read</span> -p <span class="string">&quot;Please input your name: &quot;</span> -t 30 name  <span class="comment"># 读入name的值，等待时间30秒</span></span><br><span class="line">Please input your name: acwing yxc  <span class="comment"># 标准输入</span></span><br><span class="line">acs@9e0ebfcd82d7:~$ <span class="built_in">echo</span> <span class="variable">$name</span>  <span class="comment"># 输出name的值</span></span><br><span class="line">acwing yxc  <span class="comment"># 标准输出</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="7-echo-命令"><a href="#7-echo-命令" class="headerlink" title="7. echo 命令"></a>7. echo 命令</h3><blockquote>
+<p>man echo 可以查看 echo 的命令</p>
+</blockquote>
+<p>echo 用于输出字符串。命令格式：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> STRING</span><br></pre></td></tr></table></figure>
+
+<h4 id="7-1-显示普通字符串"><a href="#7-1-显示普通字符串" class="headerlink" title="7.1 显示普通字符串"></a>7.1 显示普通字符串</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Hello AC Terminal&quot;</span></span><br><span class="line"><span class="built_in">echo</span> Hello AC Terminal  <span class="comment"># 引号可以省略</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="7-2-显示转义字符"><a href="#7-2-显示转义字符" class="headerlink" title="7.2 显示转义字符"></a>7.2 显示转义字符</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;\&quot;Hello AC Terminal\&quot;&quot;</span>  <span class="comment"># 注意只能使用双引号，如果使用单引号，则不转义</span></span><br><span class="line"><span class="built_in">echo</span> \&quot;Hello AC Terminal\&quot;  <span class="comment"># 也可以省略双引号</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="7-3-显示变量"><a href="#7-3-显示变量" class="headerlink" title="7.3 显示变量"></a>7.3 显示变量</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">name=yxc</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;My name is <span class="variable">$name</span>&quot;</span>  <span class="comment"># 输出 My name is yxc 注意是用双引号</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="7-4-显示换行"><a href="#7-4-显示换行" class="headerlink" title="7.4 显示换行"></a>7.4 显示换行</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;Hi\n&quot;</span>  <span class="comment"># -e 开启转义</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;acwing&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Hi</span><br><span class="line"></span><br><span class="line">acwing</span><br></pre></td></tr></table></figure>
+
+<h4 id="7-5-显示不换行"><a href="#7-5-显示不换行" class="headerlink" title="7.5 显示不换行"></a>7.5 显示不换行</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;Hi \c&quot;</span> <span class="comment"># -e 开启转义 \c 不换行</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;acwing&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Hi acwing</span><br></pre></td></tr></table></figure>
+
+<h4 id="7-5-显示结果定向至文件"><a href="#7-5-显示结果定向至文件" class="headerlink" title="7.5 显示结果定向至文件"></a>7.5 显示结果定向至文件</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Hello World&quot;</span> &gt; output.txt  <span class="comment"># 将内容以覆盖的方式输出到output.txt中</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="7-6-原样输出字符串，不进行转义或取变量-用单引号"><a href="#7-6-原样输出字符串，不进行转义或取变量-用单引号" class="headerlink" title="7.6 原样输出字符串，不进行转义或取变量(用单引号)"></a>7.6 原样输出字符串，不进行转义或取变量(用单引号)</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">name=acwing</span><br><span class="line">echo &#x27;$name\&quot;&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>输出结果</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$name</span>\&quot;</span><br></pre></td></tr></table></figure>
+
+<h4 id="7-7-显示命令的执行结果"><a href="#7-7-显示命令的执行结果" class="headerlink" title="7.7 显示命令的执行结果"></a>7.7 显示命令的执行结果</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> `date`</span><br></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Wed Sep 1 11:45:33 CST 2021</span><br></pre></td></tr></table></figure>
+
+<h3 id="8-printf-命令"><a href="#8-printf-命令" class="headerlink" title="8. printf 命令"></a>8. printf 命令</h3><p>printf 命令用于格式化输出，类似于 C/C++中的 printf 函数。</p>
+<p>默认不会在字符串末尾添加换行符。</p>
+<p><strong>命令格式：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">printf format-string [arguments...]</span><br></pre></td></tr></table></figure>
+
+<p><strong>用法示例：</strong></p>
+<p>脚本内容：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">printf</span> <span class="string">&quot;%10d.\n&quot;</span> 123  <span class="comment"># 占10位，右对齐</span></span><br><span class="line"><span class="built_in">printf</span> <span class="string">&quot;%-10.2f.\n&quot;</span> 123.123321  <span class="comment"># 占10位，保留2位小数，左对齐</span></span><br><span class="line"><span class="built_in">printf</span> <span class="string">&quot;My name is %s\n&quot;</span> <span class="string">&quot;yxc&quot;</span>  <span class="comment"># 格式化输出字符串</span></span><br><span class="line"><span class="built_in">printf</span> <span class="string">&quot;%d * %d = %d\n&quot;</span>  2 3 `expr 2 \* 3` <span class="comment"># 表达式的值作为参数</span></span><br></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">       123.</span><br><span class="line">123.12    .</span><br><span class="line">My name is yxc</span><br><span class="line">2 * 3 = 6</span><br></pre></td></tr></table></figure>
+
+<h3 id="9-test-命令与判断符号"><a href="#9-test-命令与判断符号" class="headerlink" title="9. test 命令与判断符号[ ]"></a>9. test 命令与判断符号[ ]</h3><h4 id="9-1-逻辑运算符-amp-amp-和"><a href="#9-1-逻辑运算符-amp-amp-和" class="headerlink" title="9.1 逻辑运算符&amp;&amp;和||"></a>9.1 逻辑运算符&amp;&amp;和||</h4><ul>
+<li><p>&amp;&amp; 表示与，|| 表示或</p>
+</li>
+<li><p>二者具有短路原则：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">expr1 &amp;&amp; expr2  <span class="comment">#当expr1为假时，直接忽略expr2</span></span><br><span class="line">expr1 || expr2  <span class="comment">#当expr1为真时，直接忽略expr2</span></span><br></pre></td></tr></table></figure></li>
+<li><p>表达式的 exit code 为 0，表示真；为非零，表示假。（与 C/C++中的定义相反）</p>
+<blockquote>
+<p>注意区别：</p>
+<p>expr stdout 1 表示真，0 表示假（输出过程）</p>
+<p>test exit code 0 表示真 非 0 表示假（进程过程）</p>
+</blockquote>
+</li>
+</ul>
+<h4 id="9-2-test-命令"><a href="#9-2-test-命令" class="headerlink" title="9.2 test 命令"></a>9.2 test 命令</h4><ul>
+<li><p>在命令行中输入 man test，可以查看 test 命令的用法。</p>
+</li>
+<li><p>test 命令用于判断文件类型，以及对变量做比较。</p>
+</li>
+<li><p>test 命令用 exit code 返回结果，而不是使用 stdout。0 表示真，非 0 表示假。</p>
+</li>
+</ul>
+<p>例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">test</span> 2 -lt 3  <span class="comment"># 为真，返回值为0  -lt等价于小于号</span></span><br><span class="line"><span class="built_in">echo</span> $?  <span class="comment"># 输出上个命令的返回值，输出0</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">acs@9e0ebfcd82d7:~$ ls  <span class="comment"># 列出当前目录下的所有文件</span></span><br><span class="line">homework  output.txt  test.sh  tmp</span><br><span class="line">acs@9e0ebfcd82d7:~$ <span class="built_in">test</span> -e test.sh &amp;&amp; <span class="built_in">echo</span> <span class="string">&quot;exist&quot;</span> || <span class="built_in">echo</span> <span class="string">&quot;Not exist&quot;</span> <span class="comment">#短路运算实现if else</span></span><br><span class="line">exist  <span class="comment"># test.sh 文件存在</span></span><br><span class="line">acs@9e0ebfcd82d7:~$ <span class="built_in">test</span> -e test2.sh &amp;&amp; <span class="built_in">echo</span> <span class="string">&quot;exist&quot;</span> || <span class="built_in">echo</span> <span class="string">&quot;Not exist&quot;</span></span><br><span class="line">Not exist  <span class="comment"># testh2.sh 文件不存在</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>文件类型判断</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">test</span> -e filename  <span class="comment"># 判断文件是否存在</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/image-20230215084804551.png"></p>
+<p><strong>文件权限判断</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">test</span> -r filename  <span class="comment"># 判断文件是否可读</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/image-20230215085029019.png" alt="image-20230215085029019"></p>
+<p><strong>整数间的比较</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">test</span> <span class="variable">$a</span> -eq <span class="variable">$b</span>  <span class="comment"># a是否等于b</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/image-20230215085123279.png" alt="image-20230215085123279"></p>
+<blockquote>
+<p>-eq ：equal（相等）</p>
+<p>-ne ：not equal（不等）</p>
+<p>-gt ：greater than（大于）</p>
+<p>-ge ：greater than or equal（大于或等于）</p>
+<p>-lt ：less than（小于）</p>
+<p>-le ：less than or equal（小于或等于）</p>
+<p>注意：在 shell 中这些符号只能用于整数的比较，不能用于字符串。</p>
+</blockquote>
+<p><strong>字符串比较</strong></p>
+<p><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/image-20230215085151868.png" alt="image-20230215085151868"></p>
+<p><strong>多重条件判定</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">test</span> -r filename -a -x filename  <span class="comment"># 这里是-a连接两个条件 即两个条件是否同时成立</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/image-20230215085237161.png" alt="image-20230215085237161"></p>
+<h4 id="9-3-判断符号"><a href="#9-3-判断符号" class="headerlink" title="9.3 判断符号[ ]"></a>9.3 判断符号[ ]</h4><p>[ ]与 test 用法几乎一模一样，更常用于 if 语句中。另外[[]]是[]的加强版，支持的特性更多。</p>
+<p>例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[ 2 -lt 3 ]  <span class="comment"># 为真，返回值为0</span></span><br><span class="line"><span class="built_in">echo</span> $?  <span class="comment"># 输出上个命令的返回值，输出0</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">acs@9e0ebfcd82d7:~$ ls  <span class="comment"># 列出当前目录下的所有文件</span></span><br><span class="line">homework  output.txt  test.sh  tmp</span><br><span class="line">acs@9e0ebfcd82d7:~$ [ -e test.sh ] &amp;&amp; <span class="built_in">echo</span> <span class="string">&quot;exist&quot;</span> || <span class="built_in">echo</span> <span class="string">&quot;Not exist&quot;</span></span><br><span class="line">exist  <span class="comment"># test.sh 文件存在</span></span><br><span class="line">acs@9e0ebfcd82d7:~$ [ -e test2.sh ] &amp;&amp; <span class="built_in">echo</span> <span class="string">&quot;exist&quot;</span> || <span class="built_in">echo</span> <span class="string">&quot;Not exist&quot;</span></span><br><span class="line">Not exist  <span class="comment"># testh2.sh 文件不存在</span></span><br></pre></td></tr></table></figure>
+
+<p>注意：</p>
+<ul>
+<li><p>[ ]内的每一项都要用<strong>空格隔开</strong></p>
+</li>
+<li><p>中括号内的<strong>变量，最好用双引号括起来</strong></p>
+</li>
+<li><p>中括号内的常数，最好用单或双引号括起来</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">name=<span class="string">&quot;acwing yxc&quot;</span></span><br><span class="line">[ <span class="variable">$name</span> == <span class="string">&quot;acwing yxc&quot;</span> ]  <span class="comment"># 错误，等价于 [ acwing yxc == &quot;acwing yxc&quot; ]，参数太多</span></span><br><span class="line">[ <span class="string">&quot;<span class="variable">$name</span>&quot;</span> == <span class="string">&quot;acwing yxc&quot;</span> ]  <span class="comment"># 正确</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="10-判断语句"><a href="#10-判断语句" class="headerlink" title="10. 判断语句"></a>10. 判断语句</h3><blockquote>
+<p>if…then 形式</p>
+<p>类似于 C/C++中的 if-else 语句。</p>
+</blockquote>
+<h4 id="10-1-单层-if"><a href="#10-1-单层-if" class="headerlink" title="10.1 单层 if"></a>10.1 单层 if</h4><p>命令格式：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> condition</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">    语句1</span><br><span class="line">    语句2</span><br><span class="line">    ...</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">a=3</span><br><span class="line">b=4</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [ <span class="string">&quot;<span class="variable">$a</span>&quot;</span> -lt <span class="string">&quot;<span class="variable">$b</span>&quot;</span> ] &amp;&amp; [ <span class="string">&quot;<span class="variable">$a</span>&quot;</span> -gt 2 ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="variable">$&#123;a&#125;</span>在范围内</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">3在范围内</span><br></pre></td></tr></table></figure>
+
+<h4 id="10-2-单层-if-else"><a href="#10-2-单层-if-else" class="headerlink" title="10.2 单层 if-else"></a>10.2 单层 if-else</h4><p>命令格式：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> condition</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">    语句1</span><br><span class="line">    语句2</span><br><span class="line">    ...</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    语句1</span><br><span class="line">    语句2</span><br><span class="line">    ...</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">a=3</span><br><span class="line">b=4</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> ! [ <span class="string">&quot;<span class="variable">$a</span>&quot;</span> -lt <span class="string">&quot;<span class="variable">$b</span>&quot;</span> ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="variable">$&#123;a&#125;</span>不小于<span class="variable">$&#123;b&#125;</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="variable">$&#123;a&#125;</span>小于<span class="variable">$&#123;b&#125;</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">3小于4</span><br></pre></td></tr></table></figure>
+
+<h4 id="10-3-多层-if-elif-elif-else"><a href="#10-3-多层-if-elif-elif-else" class="headerlink" title="10.3 多层 if-elif-elif-else"></a>10.3 多层 if-elif-elif-else</h4><p>命令格式：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> condition</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">    语句1</span><br><span class="line">    语句2</span><br><span class="line">    ...</span><br><span class="line"><span class="keyword">elif</span> condition</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">    语句1</span><br><span class="line">    语句2</span><br><span class="line">    ...</span><br><span class="line"><span class="keyword">elif</span> condition</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">    语句1</span><br><span class="line">    语句2</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    语句1</span><br><span class="line">    语句2</span><br><span class="line">    ...</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">a=4</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$a</span> -eq 1 ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="variable">$&#123;a&#125;</span>等于1</span><br><span class="line"><span class="keyword">elif</span> [ <span class="variable">$a</span> -eq 2 ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="variable">$&#123;a&#125;</span>等于2</span><br><span class="line"><span class="keyword">elif</span> [ <span class="variable">$a</span> -eq 3 ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="variable">$&#123;a&#125;</span>等于3</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="built_in">echo</span> 其他</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">其他</span><br></pre></td></tr></table></figure>
+
+<h4 id="10-4-case…esac-形式"><a href="#10-4-case…esac-形式" class="headerlink" title="10.4 case…esac 形式"></a>10.4 case…esac 形式</h4><blockquote>
+<p>类似于 C/C++中的 switch 语句。</p>
+</blockquote>
+<p>命令格式：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> $变量名称 <span class="keyword">in</span></span><br><span class="line">    值1)</span><br><span class="line">        语句1</span><br><span class="line">        语句2</span><br><span class="line">        ...</span><br><span class="line">        ;;  <span class="comment"># 类似于C/C++中的break</span></span><br><span class="line">    值2)</span><br><span class="line">        语句1</span><br><span class="line">        语句2</span><br><span class="line">        ...</span><br><span class="line">        ;;</span><br><span class="line">    *)  <span class="comment"># 类似于C/C++中的default</span></span><br><span class="line">        语句1</span><br><span class="line">        语句2</span><br><span class="line">        ...</span><br><span class="line">        ;;</span><br><span class="line"><span class="keyword">esac</span></span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">a=4</span><br><span class="line"></span><br><span class="line"><span class="keyword">case</span> <span class="variable">$a</span> <span class="keyword">in</span></span><br><span class="line">    1)</span><br><span class="line">        <span class="built_in">echo</span> <span class="variable">$&#123;a&#125;</span>等于1</span><br><span class="line">        ;;</span><br><span class="line">    2)</span><br><span class="line">        <span class="built_in">echo</span> <span class="variable">$&#123;a&#125;</span>等于2</span><br><span class="line">        ;;</span><br><span class="line">    3)</span><br><span class="line">        <span class="built_in">echo</span> <span class="variable">$&#123;a&#125;</span>等于3</span><br><span class="line">        ;;</span><br><span class="line">    *)</span><br><span class="line">        <span class="built_in">echo</span> 其他</span><br><span class="line">        ;;</span><br><span class="line"><span class="keyword">esac</span></span><br></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">其他</span><br></pre></td></tr></table></figure>
+
+<h3 id="11-循环语句"><a href="#11-循环语句" class="headerlink" title="11. 循环语句"></a>11. 循环语句</h3><h4 id="11-1-for…in…do…done"><a href="#11-1-for…in…do…done" class="headerlink" title="11.1 for…in…do…done"></a>11.1 for…in…do…done</h4><p>命令格式：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> var <span class="keyword">in</span> val1 val2 val3</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    语句1</span><br><span class="line">    语句2</span><br><span class="line">    ...</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<p>示例 1，输出 a 2 cc，每个元素一行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> a 2 cc</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="variable">$i</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<p>示例 2，输出当前路径下的所有文件名，每个文件名一行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> file <span class="keyword">in</span> `ls`    <span class="comment"># 这里`ls` 可以用(ls)替换</span></span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="variable">$file</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<p>示例 3，输出 1-10</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> $(seq 1 10)</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="variable">$i</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<p>示例 4，使用{1..10} 或者 {a..z}</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> &#123;a..z&#125;</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="variable">$i</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="11-2-for-…-…-…-do…done"><a href="#11-2-for-…-…-…-do…done" class="headerlink" title="11.2 for ((…;…;…)) do…done"></a>11.2 for ((…;…;…)) do…done</h4><p>命令格式：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> ((expression; condition; expression))</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    语句1</span><br><span class="line">    语句2</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<p>示例，输出 1-10，每个数占一行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> ((i=1; i&lt;=10; i++))</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="variable">$i</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="11-3-while…do…done-循环"><a href="#11-3-while…do…done-循环" class="headerlink" title="11.3 while…do…done 循环"></a>11.3 while…do…done 循环</h4><p>命令格式：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> condition</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    语句1</span><br><span class="line">    语句2</span><br><span class="line">    ...</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<p>示例：文件结束符为 Ctrl+d，输入文件结束符后 read 指令返回 false。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> <span class="built_in">read</span> name  <span class="comment"># 每次读入一个变量</span></span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="variable">$name</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="11-4-until…do…done-循环"><a href="#11-4-until…do…done-循环" class="headerlink" title="11.4 until…do…done 循环"></a>11.4 until…do…done 循环</h4><blockquote>
+<p>当条件为真时结束。</p>
+</blockquote>
+<p>命令格式：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">until condition</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    语句1</span><br><span class="line">    语句2</span><br><span class="line">    ...</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<p>示例，当用户输入 yes 或者 YES 时结束，否则一直等待读入。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">until [ <span class="string">&quot;<span class="variable">$&#123;word&#125;</span>&quot;</span> == <span class="string">&quot;yes&quot;</span> ] || [ <span class="string">&quot;<span class="variable">$&#123;word&#125;</span>&quot;</span> == <span class="string">&quot;YES&quot;</span> ]</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    <span class="built_in">read</span> -p <span class="string">&quot;Please input yes/YES to stop this program: &quot;</span> word</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="11-5-break-命令"><a href="#11-5-break-命令" class="headerlink" title="11.5 break 命令"></a>11.5 break 命令</h4><blockquote>
+<p>跳出当前一层循环，注意与 C/C++不同的是：break 不能跳出 case 语句。</p>
+</blockquote>
+<p>示例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> <span class="built_in">read</span> name</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    <span class="keyword">for</span> ((i=1;i&lt;=10;i++))</span><br><span class="line">    <span class="keyword">do</span></span><br><span class="line">        <span class="keyword">case</span> <span class="variable">$i</span> <span class="keyword">in</span></span><br><span class="line">            8)</span><br><span class="line">                <span class="built_in">break</span></span><br><span class="line">                ;;</span><br><span class="line">            *)</span><br><span class="line">                <span class="built_in">echo</span> <span class="variable">$i</span></span><br><span class="line">                ;;</span><br><span class="line">        <span class="keyword">esac</span></span><br><span class="line">    <span class="keyword">done</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<p>该示例每读入非 EOF 的字符串，会输出一遍 1-7。<br>该程序可以输入 Ctrl+d 文件结束符来结束，也可以直接用 Ctrl+c 杀掉该进程。</p>
+<h4 id="11-6-continue-命令"><a href="#11-6-continue-命令" class="headerlink" title="11.6 continue 命令"></a>11.6 continue 命令</h4><blockquote>
+<p>跳出当前循环。</p>
+</blockquote>
+<p>示例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> ((i=1;i&lt;=10;i++))</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    <span class="keyword">if</span> [ `expr <span class="variable">$i</span> % 2` -eq 0 ]</span><br><span class="line">    <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">continue</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="variable">$i</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<p>该程序输出 1-10 中的所有奇数。</p>
+<h4 id="11-7-死循环的处理方式"><a href="#11-7-死循环的处理方式" class="headerlink" title="11.7 死循环的处理方式"></a>11.7 死循环的处理方式</h4><p>如果 AC Terminal 可以打开该程序，则输入 Ctrl+c 即可。</p>
+<p>否则可以直接关闭进程：</p>
+<ol>
+<li><p>使用 top 命令找到进程的 PID</p>
+<blockquote>
+<p>shift + F 进程列表按内存排序</p>
+</blockquote>
+</li>
+<li><p>输入 kill -9 PID 即可关掉此进程</p>
+</li>
+</ol>
+<h3 id="12-函数"><a href="#12-函数" class="headerlink" title="12. 函数"></a>12. 函数</h3><ul>
+<li>bash 中的函数类似于 C/C++中的函数，但 return 的返回值与 C/C++不同，返回的是 exit code，取值为 0-255，<strong>0 表示正常结束</strong>。</li>
+<li>如果想获取函数的输出结果，可以通过 echo 输出到 stdout 中，然后<strong>通过$(function_name)来获取 stdout 中的结果</strong>。</li>
+<li><strong>函数的 return 值可以通过$?来获取</strong>。</li>
+</ul>
+<p>命令格式：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[<span class="keyword">function</span>] <span class="function"><span class="title">func_name</span></span>() &#123;  <span class="comment"># function关键字可以省略</span></span><br><span class="line">    语句1</span><br><span class="line">    语句2</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="12-1-不获取-return-值和-stdout-值"><a href="#12-1-不获取-return-值和-stdout-值" class="headerlink" title="12.1 不获取 return 值和 stdout 值"></a>12.1 不获取 return 值和 stdout 值</h4><p>示例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">func</span></span>() &#123;</span><br><span class="line">    name=yxc</span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;Hello <span class="variable">$name</span>&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func  <span class="comment"># 调用不需要加小括号</span></span><br></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Hello yxc</span><br></pre></td></tr></table></figure>
+
+<h4 id="12-2-获取-return-值和-stdout-值"><a href="#12-2-获取-return-值和-stdout-值" class="headerlink" title="12.2 获取 return 值和 stdout 值"></a>12.2 获取 return 值和 stdout 值</h4><blockquote>
+<p>不写 return 时，默认 return 0。</p>
+</blockquote>
+<p>示例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">func</span></span>() &#123;</span><br><span class="line">    name=yxc</span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;Hello <span class="variable">$name</span>&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">return</span> 123</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">output=$(func)</span><br><span class="line">ret=$?   <span class="comment"># 获取上次进程的返回值</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;output = <span class="variable">$output</span>&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;return = <span class="variable">$ret</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">output = Hello yxc</span><br><span class="line"><span class="built_in">return</span> = 123</span><br></pre></td></tr></table></figure>
+
+<h4 id="12-3-函数的输入参数"><a href="#12-3-函数的输入参数" class="headerlink" title="12.3 函数的输入参数"></a>12.3 函数的输入参数</h4><p>在函数内，$1 表示第一个输入参数，$2 表示第二个输入参数，依此类推。</p>
+<blockquote>
+<p>注意：函数内的$0 仍然是文件名，而不是函数名。</p>
+</blockquote>
+<p><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/image-20230215104731961.png" alt="image-20230215104731961"></p>
+<p>示例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">func</span></span>() &#123;  <span class="comment"># 递归计算 $1 + ($1 - 1) + ($1 - 2) + ... + 0</span></span><br><span class="line">    word=<span class="string">&quot;&quot;</span></span><br><span class="line">    <span class="keyword">while</span> [ <span class="string">&quot;<span class="variable">$&#123;word&#125;</span>&quot;</span> != <span class="string">&#x27;y&#x27;</span> ] &amp;&amp; [ <span class="string">&quot;<span class="variable">$&#123;word&#125;</span>&quot;</span> != <span class="string">&#x27;n&#x27;</span> ]</span><br><span class="line">    <span class="keyword">do</span></span><br><span class="line">        <span class="built_in">read</span> -p <span class="string">&quot;要进入func(<span class="variable">$1</span>)函数吗？请输入y/n：&quot;</span> word</span><br><span class="line">    <span class="keyword">done</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> [ <span class="string">&quot;<span class="variable">$word</span>&quot;</span> == <span class="string">&#x27;n&#x27;</span> ]</span><br><span class="line">    <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> 0</span><br><span class="line">        <span class="built_in">return</span> 0</span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> [ <span class="variable">$1</span> -le 0 ]</span><br><span class="line">    <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> 0</span><br><span class="line">        <span class="built_in">return</span> 0</span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line">    sum=$(func $(expr <span class="variable">$1</span> - 1))  <span class="comment"># 递归调用 $(expr $1 - 1)可用`expr $1 - 1`替换</span></span><br><span class="line">    <span class="built_in">echo</span> $(expr <span class="variable">$sum</span> + <span class="variable">$1</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> $(func 10)</span><br></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">55</span><br></pre></td></tr></table></figure>
+
+<h4 id="12-4-函数内的局部变量"><a href="#12-4-函数内的局部变量" class="headerlink" title="12. 4 函数内的局部变量"></a>12. 4 函数内的局部变量</h4><ul>
+<li><p>可以在函数内定义局部变量，作用范围仅在当前函数内。</p>
+</li>
+<li><p>可以在递归函数中定义局部变量。</p>
+</li>
+</ul>
+<p>命令格式：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">local</span> 变量名=变量值</span><br></pre></td></tr></table></figure>
+
+<p>例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#! /bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">func</span></span>() &#123;</span><br><span class="line">    <span class="built_in">local</span> name=yxc</span><br><span class="line">    <span class="built_in">echo</span> <span class="variable">$name</span></span><br><span class="line">&#125;</span><br><span class="line">func</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$name</span></span><br></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<p>第一行为函数内的 name 变量，第二行为函数外调用 name 变量，会发现此时该变量不存在。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yxc   <span class="comment">#第一行</span></span><br><span class="line">      <span class="comment">#第二行</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="13-exit-命令"><a href="#13-exit-命令" class="headerlink" title="13. exit 命令"></a>13. exit 命令</h4><ul>
+<li><p>exit 命令用来退出当前 shell 进程，并返回一个退出状态；<strong>使用$?可以接收这个退出状态</strong>。</p>
+</li>
+<li><p>exit 命令可以接受一个整数值作为参数，代表退出状态。如果不指定，<strong>默认状态值是 0</strong>。</p>
+</li>
+<li><p>exit 退出状态只能是一个介于 0~255 之间的整数，其中<strong>只有 0 表示成功</strong>，其它值都表示失败。</p>
+</li>
+</ul>
+<p>示例：</p>
+<p>创建脚本 test.sh，内容如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#! /bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$#</span> -ne 1 ]  <span class="comment"># 如果传入参数个数等于1，则正常退出；否则非正常退出。</span></span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;arguments not valid&quot;</span></span><br><span class="line">    <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;arguments valid&quot;</span></span><br><span class="line">    <span class="built_in">exit</span> 0</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+
+<p>执行该脚本：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">acs@9e0ebfcd82d7:~$ chmod +x test.sh</span><br><span class="line">acs@9e0ebfcd82d7:~$ ./test.sh acwing</span><br><span class="line">arguments valid</span><br><span class="line">acs@9e0ebfcd82d7:~$ <span class="built_in">echo</span> $?  <span class="comment"># 传入一个参数，则正常退出，exit code为0</span></span><br><span class="line">0</span><br><span class="line">acs@9e0ebfcd82d7:~$ ./test.sh</span><br><span class="line">arguments not valid</span><br><span class="line">acs@9e0ebfcd82d7:~$ <span class="built_in">echo</span> $?  <span class="comment"># 传入参数个数不是1，则非正常退出，exit code为1</span></span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<h3 id="13-文件重定向"><a href="#13-文件重定向" class="headerlink" title="13. 文件重定向"></a>13. 文件重定向</h3><p>每个进程默认打开 3 个文件描述符：</p>
+<ul>
+<li>stdin 标准输入，从命令行读取数据，文件描述符为 0</li>
+<li>stdout 标准输出，向命令行输出数据，文件描述符为 1</li>
+<li>stderr 标准错误输出，向命令行输出数据，文件描述符为 2</li>
+</ul>
+<p>可以用文件重定向将这三个文件重定向到其他文件中。</p>
+<p><strong>重定向命令列表</strong></p>
+<p><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/image-20230215103257564.png" alt="image-20230215103257564"></p>
+<p><strong>输入和输出重定向</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> -e <span class="string">&quot;Hello \c&quot;</span> &gt; output.txt  <span class="comment"># 将stdout重定向到output.txt中</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;World&quot;</span> &gt;&gt; output.txt  <span class="comment"># 将字符串追加到output.txt中</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">read</span> str &lt; output.txt  <span class="comment"># 从output.txt中读取字符串</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$str</span>  <span class="comment"># 输出结果：Hello World</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>同时重定向 stdin 和 stdout</strong></p>
+<p>创建 bash 脚本：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#! /bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">read</span> a</span><br><span class="line"><span class="built_in">read</span> b</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> $(expr <span class="string">&quot;<span class="variable">$a</span>&quot;</span> + <span class="string">&quot;<span class="variable">$b</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>创建 input.txt，里面的内容为：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">3</span><br><span class="line">4</span><br></pre></td></tr></table></figure>
+
+<p>执行命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">acs@9e0ebfcd82d7:~$ chmod +x test.sh  <span class="comment"># 添加可执行权限</span></span><br><span class="line">acs@9e0ebfcd82d7:~$ ./test.sh &lt; input.txt &gt; output.txt  <span class="comment"># 从input.txt中读取内容，将输出写入output.txt中</span></span><br><span class="line">acs@9e0ebfcd82d7:~$ cat output.txt  <span class="comment"># 查看output.txt中的内容</span></span><br><span class="line">7</span><br></pre></td></tr></table></figure>
+
+<h3 id="14-引入外部文件"><a href="#14-引入外部文件" class="headerlink" title="14. 引入外部文件"></a>14. 引入外部文件</h3><blockquote>
+<p>类似于 C/C++中的 include 操作，bash 也可以引入其他文件中的代码。</p>
+</blockquote>
+<p>语法格式：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">. filename  <span class="comment"># 注意点和文件名之间有一个空格</span></span><br><span class="line"></span><br><span class="line">或</span><br><span class="line"></span><br><span class="line"><span class="built_in">source</span> filename</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例：</strong></p>
+<p>创建 test1.sh，内容为：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#! /bin/bash</span></span><br><span class="line"></span><br><span class="line">name=yxc  <span class="comment"># 定义变量name</span></span><br></pre></td></tr></table></figure>
+
+<p>然后创建 test2.sh，内容为：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#! /bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">source</span> test1.sh <span class="comment"># 或 . test1.sh</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> My name is: <span class="variable">$name</span>  <span class="comment"># 可以使用test1.sh中的变量</span></span><br></pre></td></tr></table></figure>
+
+<p>执行命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">acs@9e0ebfcd82d7:~$ chmod +x test2.sh</span><br><span class="line">acs@9e0ebfcd82d7:~$ ./test2.sh</span><br><span class="line">My name is: yxc</span><br></pre></td></tr></table></figure>
+
+<h3 id="exit-与-return-的区别"><a href="#exit-与-return-的区别" class="headerlink" title="exit 与 return 的区别"></a>exit 与 return 的区别</h3><ol>
+<li>作用不同。exit 用于在程序运行的过程中随时结束程序，exit 的参数是返回给 OS 的，注意在函数中调用 exit 不是退出函数，而是直接退出执行的脚本文件。exit 是结束一个进程，它将删除进程使用的内存空间，同时把错误信息返回父进程。而 return 是返回函数值并退出函数；</li>
+<li>语义层级不同。return 是语言级别的，它表示了调用堆栈的返回；而 exit 是系统调用级别的，它表示了一个进程的结束；</li>
+<li>使用方法不用。return 一般用在函数方法体内，exit 可以出现在 Shell 脚本中的任意位置。</li>
+<li>如果你用 脚本 a 调用 脚本 b ，要在 a 中判断 b 是否正常返回，就是根据 exit 0 or 1 来识别。执行完 b 后， 判断 $? 就是返回值。如果 shel 脚本中调用的子脚本的 exit，那么会退出子脚本。如果是 source 一个子脚本，里面的 exit 会导致外面的脚本也退出。</li>
+</ol>
+<h3 id="小技巧：如何将服务器中的文件整体复制出来？"><a href="#小技巧：如何将服务器中的文件整体复制出来？" class="headerlink" title="小技巧：如何将服务器中的文件整体复制出来？"></a>小技巧：如何将服务器中的文件整体复制出来？</h3><ol>
+<li><p>退出 tmux</p>
+</li>
+<li><p>cat filename：展示 filename 的文件内容</p>
+</li>
+<li><p>鼠标选中文本开头的若干字符</p>
+</li>
+<li><p>用滚轮滑到文件结尾</p>
+</li>
+<li><p>按住 Shift，同时鼠标点击文件结尾，此时会选中文件所有内容</p>
+<blockquote>
+<p>Windows/Linux 下，按 Ctrl + insert 可以复制全文；Mac 下，按 Command + c 可以复制全文。</p>
+</blockquote>
+</li>
+</ol>
+<h2 id="ssh"><a href="#ssh" class="headerlink" title="ssh"></a>ssh</h2><h3 id="1-ssh-登录"><a href="#1-ssh-登录" class="headerlink" title="1. ssh 登录"></a>1. ssh 登录</h3><h4 id="1-1-基本用法"><a href="#1-1-基本用法" class="headerlink" title="1.1 基本用法"></a>1.1 基本用法</h4><p>远程登录服务器：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh user@hostname</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>user: 用户名<br>hostname: IP 地址或域名</p>
+</blockquote>
+<p>第一次登录时会提示：</p>
+<p><code>The authenticity of host &#39;123.57.47.211 (123.57.47.211)&#39; can&#39;t be established. ECDSA key fingerprint is SHA256:iy237yysfCe013/l+kpDGfEG9xxHxm0dnxnAbJTPpG8. Are you sure you want to continue connecting (yes/no/[fingerprint])?</code></p>
+<p>输入 yes，然后回车即可。</p>
+<p>这样会将该服务器的信息记录在<strong>本地</strong><code>~/.ssh/known_hosts</code>文件中。</p>
+<p>然后输入密码即可登录到远程服务器中。</p>
+<blockquote>
+<p>退出当前服务器为 Ctrl + d 或者输入命令 exit</p>
+</blockquote>
+<p>默认登录端口号为<code>22</code>。如果想登录某一特定端口：</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh user@hostname -p <span class="number">22</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="1-2-配置文件"><a href="#1-2-配置文件" class="headerlink" title="1.2 配置文件"></a>1.2 配置文件</h4><p><strong>本地</strong>创建文件 <code>~/.ssh/config</code></p>
+<p>然后在文件中输入：</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Host myserver1</span><br><span class="line">	HostName  IP地址或域名</span><br><span class="line">    User 用户名</span><br><span class="line">	Port 端口</span><br><span class="line"></span><br><span class="line">Host myserver2</span><br><span class="line">    HostName IP地址或域名</span><br><span class="line">    User 用户名</span><br></pre></td></tr></table></figure>
+
+<p>之后再使用服务器时，可以直接使用别名 myserver1、myserver2。</p>
+<h4 id="1-3-密钥登录"><a href="#1-3-密钥登录" class="headerlink" title="1.3 密钥登录"></a>1.3 密钥登录</h4><p><strong>本地</strong>创建密钥：（配置秘钥与上面配置文件无关，上面配置文件只是起个别名 方便 ssh 连接）</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen</span><br></pre></td></tr></table></figure>
+
+<p>然后一直回车即可。</p>
+<p>执行结束后，<code>~/.ssh/</code>目录下会多两个文件：</p>
+<ul>
+<li><code>id_rsa</code>：私钥</li>
+<li><code>id_rsa.pub</code>：公钥</li>
+</ul>
+<p>之后想免密码登录哪个服务器，就将公钥传给哪个服务器即可。</p>
+<p>例如，想免密登录<code>myserver1</code>服务器。则将公钥中的内容，复制到<code>myserver1</code>中的<code>~/.ssh/authorized_keys</code>文件里即可。</p>
+<p>也可以在本地使用如下命令一键添加公钥：</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-copy-id myserver1</span><br></pre></td></tr></table></figure>
+
+<p>**本地用 git bash 配置 ssh 免密登录需要先移动到家目录下 **</p>
+<p><strong>即<code>cd ~</code>,一般为<code>/c/Users/chjm</code></strong></p>
+<h4 id="1-4-执行命令"><a href="#1-4-执行命令" class="headerlink" title="1.4 执行命令"></a>1.4 执行命令</h4><p>命令格式：</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh user@hostname command</span><br></pre></td></tr></table></figure>
+
+<p>例如：</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ssh user@hostname ls -a</span><br><span class="line"># 单引号中的$i可以求值 双引号不行</span><br><span class="line">ssh myserver <span class="comment">&#x27;for ((i = 0; i &lt; 10; i ++ )) do echo $i; done&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-scp-传文件"><a href="#2-scp-传文件" class="headerlink" title="2. scp 传文件"></a>2. scp 传文件</h3><h4 id="1-基本用法"><a href="#1-基本用法" class="headerlink" title="1. 基本用法"></a>1. 基本用法</h4><p>命令格式：</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp source destination</span><br></pre></td></tr></table></figure>
+
+<p>将<code>source</code>路径下的文件复制到<code>destination</code>中</p>
+<p><strong>复制文件：</strong></p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp source1 source2 destination  ## 复制source1，source2两个文件到目标地址</span><br></pre></td></tr></table></figure>
+
+<p><strong>复制文件夹：</strong></p>
+<ol>
+<li><p>将本地家目录中的 tmp 文件夹复制到 myserver 服务器中的/home/acs/目录下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp -r ~/tmp myserver:/home/acs/  <span class="comment"># -r 放在前面</span></span><br></pre></td></tr></table></figure></li>
+<li><p>将本地家目录中的 tmp 文件夹复制到 myserver 服务器中的~/homework/目录下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp -r ~/tmp myserver:homework/</span><br></pre></td></tr></table></figure></li>
+<li><p>将 myserver 服务器中的~/homework/文件夹复制到本地的当前路径下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp -r myserver:homework .    <span class="comment"># . 代表本地的当前路径下</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<p><strong>指定服务器的端口号：</strong></p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp -P <span class="number">22</span> source1 source2 destination</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意： <code>scp</code>的<code>-r -P</code>等参数尽量加在<code>source</code>和<code>destination</code>之前。</p>
+</blockquote>
+<h3 id="2-使用-scp-配置其他服务器的-vim-和-tmux"><a href="#2-使用-scp-配置其他服务器的-vim-和-tmux" class="headerlink" title="2. 使用 scp 配置其他服务器的 vim 和 tmux"></a>2. 使用 scp 配置其他服务器的 vim 和 tmux</h3><figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp ~/.vimrc ~/.tmux.conf myserver: # 把配置文件传到云端</span><br></pre></td></tr></table></figure>
+
+<h2 id="git"><a href="#git" class="headerlink" title="git"></a>git</h2><h3 id="1-基本概念"><a href="#1-基本概念" class="headerlink" title="1. 基本概念"></a>1. 基本概念</h3><ul>
+<li><p><strong>工作区（Working Directory）</strong>：仓库的目录。工作区是独立于各个分支的。</p>
+</li>
+<li><p><strong>暂存区（Staging area）/索引（index）</strong>：数据暂时存放的区域，类似于工作区写入版本库前的缓存区。暂存区是独立于各个分支的。</p>
+</li>
+<li><p><strong>版本库/仓库（Repository）</strong>：存放所有已经提交到本地仓库的代码版本。工作区有一个隐藏目录.git，这个不算工作区，而是 Git 的版本库。</p>
+</li>
+<li><p>版本结构：树结构，树中每个节点代表一个代码版本。</p>
+<p><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/image-20230216172859412.png"></p>
+<p>Git 的版本库里存了很多东西，其中最重要的就是称为<code>stage</code>（或者叫 index）的暂存区，还有 Git 为我们自动创建的第一个分支<code>master</code>，以及指向<code>master</code>的一个指针叫<code>HEAD</code>。</p>
+</li>
+</ul>
+<h3 id="2-全局设置"><a href="#2-全局设置" class="headerlink" title="2. 全局设置"></a>2. 全局设置</h3><ol>
+<li><code>git config --global user.name xxx</code>：设置全局用户名，信息记录在<code>~/.gitconfig</code>文件中</li>
+<li><code>git config --global user.email xxx@xxx.com</code>：设置全局邮箱地址，信息记录在<code>~/.gitconfig</code>文件中</li>
+</ol>
+<h3 id="3-整体流程"><a href="#3-整体流程" class="headerlink" title="3. 整体流程"></a>3. 整体流程</h3><p><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/image-20230216164842061.png"></p>
+<ol>
+<li><p><code>git init</code>：将当前目录配置成 git 仓库，信息记录在隐藏的<code>.git</code>文件夹中</p>
+<blockquote>
+<p>注意初始化后，还没有生成提交节点，所以 HEAD 指针指向还未形成的 master 分支</p>
+</blockquote>
+<p><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/image-20230216174017691.png" alt="image-20230216174017691"></p>
+</li>
+<li><p><code>git add</code>告诉<code>Git</code>，把文件添加到仓库，进行变化跟踪：</p>
+<blockquote>
+<ol>
+<li><p>删除文件 a.txt b.txt 后 同样可以使用<code>git add a.txt b.txt</code>将删除后的状态添加到缓存区</p>
+</li>
+<li><p><code>git add -A</code> ：提交所有变化</p>
+</li>
+<li><p><code>git add -u</code>：提交被修改(modified)和被删除(deleted)文件，不包括新文件(new)</p>
+</li>
+<li><p><code>git add .  </code>：提交新文件(new)和被修改(modified)文件，不包括被删除(deleted)文件</p>
+</li>
+</ol>
+</blockquote>
+<img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/image-20230216173942581.png" alt="image-20230216173942581" style="zoom:67%;" /></li>
+<li><p><code>git commit -m &quot;给自己看的备注信息&quot;</code>，它首先会移除索引（index）中的内容并将它保存为一个永久的快照，然后创建一个指向该快照的提交对象，最后更新 master 来指向本次提交。</p>
+<img src="C:\Users\15957\AppData\Roaming\Typora\typora-user-images\image-20230216173829563.png" alt="image-20230216173829563" style="zoom: 67%;" /></li>
+<li><p>添加远程库</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="comment">remote add origin https://github.com/xx/test.git # 在项目文件夹中使用</span></span><br></pre></td></tr></table></figure>
+
+<p>添加后，远程库的名字就是<code>origin</code>，这是<code>Git</code>默认远程库。</p>
+<p>下一步，就可以把本地库的所有内容推送到远程库上：</p>
+</li>
+<li><p>把本地库的所有内容推送到远程库上</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push -u origin master</span><br></pre></td></tr></table></figure>
+
+<p>把本地库的内容推送到远程，用<code>git push</code>命令，实际上是把当前分支</p>
+<p><code>master</code>推送到远程。由于远程库是空的，我们第一次推送<code>master</code>分支</p>
+<p>时，加上了<code>-u</code>参数，<code>Git</code>不但会把本地的<code>master</code>分支内容推送的远程</p>
+<p>新的<code>master</code>分支，还会把本地的<code>master</code>分支和远程的<code>master</code>分支关</p>
+<p>联起来，在以后的推送或者拉取时就不需要加<code>-u</code>了。</p>
+</li>
+<li><p>将远程仓库 XXX 下载到当前目录下</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone git@git.acwing.<span class="keyword">com</span>:xxx/XXX.git</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="4-流程详解"><a href="#4-流程详解" class="headerlink" title="4. 流程详解"></a>4. 流程详解</h3><h4 id="4-1-几个术语"><a href="#4-1-几个术语" class="headerlink" title="4.1 几个术语"></a>4.1 几个术语</h4><ul>
+<li><p>HEAD：这是当前分支版本顶端的别名，也就是在当前分支你最近的一个提交</p>
+</li>
+<li><p>Index：index 也被称为 staging area，是指一整套即将被下一个提交的文件集合。他也是将成为<code>HEAD</code>的父亲的那个 commit</p>
+</li>
+<li><p>Working Copy：working copy 代表你正在工作的那个文件集</p>
+</li>
+</ul>
+<p>在下图中，可以看到部分<code>Git</code>命令是如何影响工作区和暂存区（<code>stage</code>，亦称<code>index</code>）的。</p>
+<p><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/image-20230216180553224.png" alt="image-20230216180553224"></p>
+<p>图中左侧为工作区，右侧为版本库。在版本库中标记为<code>index</code>的区域是暂存区（<code>stage</code>，亦称<code>index</code>），标记为<code>master</code>的是<code>master</code>分支所代表的目录树。</p>
+<ul>
+<li><code>HEAD</code>实际是指向指向当前所在的本地分支的一个“游标”。告诉<code>Git</code>当前的工作区在哪一个分支上。</li>
+<li><code>head</code>(小写)是<code>commit</code>对象的引用，每个<code>head</code>都有一个名字（分支名字或者标签名字等等），但是默认情况下，每个叫<code>master</code>的<code>repository</code>都会有一个<code>head</code>, 一个<code>repository</code>可以包含任意数量的<code>head</code>。在任何时候，只要这个<code>head</code>被选择成为<code>current head</code>，那么这个<code>head</code>就成了<code>HEAD</code>,总是大写</li>
+<li>图中的<code>objects</code>标识的区域为<code>Git</code>的对象库，实际位于<code>.git/objects</code>目录下。</li>
+</ul>
+<h4 id="4-2-HEAD-的指向变化"><a href="#4-2-HEAD-的指向变化" class="headerlink" title="4.2 HEAD 的指向变化"></a>4.2 HEAD 的指向变化</h4><ol>
+<li><p>当你第一次<code>checkout</code>一个分支，**<code>HEAD</code>就指向当前分支的最近一个<code>commit</code>(即该分支最后提交的 commit)**，在<code>HEAD</code>中的文件集和在<code>index</code>中的文件集是相同的，在<code>working copy</code>的文件集和<code>HEAD</code>,<code>Index</code>中的是完全相同的。所有三者(<code>HEAD</code>,<code>Index(Staging)</code>,<code>Working Copy</code>)都是相同的文件集。</p>
+<blockquote>
+<p>checkout 作用是修改 HEAD 的指向，变更 Index 区域里的内容，修改 Working Directory(工作区)里的内容</p>
+</blockquote>
+</li>
+<li><p>当你对一个文件执行一次修改，即<code>Working Copy</code>不再和<code>index</code>,<code>head</code>相同，<code>Git</code>会标记这个文件是修改过的。</p>
+</li>
+<li><p>当你执行一个<code>git add</code>, 它就<code>stages the file in the index</code>，此时<code>working copy</code>和<code>index</code>区是相同的，但是他们和<code>HEAD</code>区是不同的。</p>
+</li>
+<li><p>当你执行一个<code>git commit</code>, Git 就创建一个新的<code>commit</code>，**随后<code>HEAD就</code>指向这个新的<code>commit</code>**，此时<code>index</code>, <code>working copy</code>的状态和<code>HEAD</code>就又完全匹配相同了</p>
+</li>
+</ol>
+<h3 id="5-Git-文件的四种状态"><a href="#5-Git-文件的四种状态" class="headerlink" title="5. Git 文件的四种状态"></a>5. Git 文件的四种状态</h3><ul>
+<li><strong>Untracked</strong>: 未跟踪, 此文件在文件夹中, 但并没有加入到 git 库, 不参与版本控制. 通过<code>git add</code>状态变为<code>Staged</code>.</li>
+<li><strong>Unmodify</strong>: 文件已经入库, 未修改, 即版本库中的文件快照内容与文件夹中完全一致. 这种类型的文件有两种去处, 如果它被修改, 而变为<code>Modified</code>. 如果使用<code>git rm</code>移出版本库, 则成为<code>Untracked</code>文件</li>
+<li><strong>Modified</strong>: 文件已修改, 仅仅是修改, 并没有进行其他的操作. 这个文件也有两个去处, 通过<code>git add</code>可进入暂存<code>staged</code>状态, 使用<code>git checkout</code> 则丢弃修改过, 返回到<code>unmodify</code>状态, 这个<code>git checkout</code>即从库中取出文件, 覆盖当前修改</li>
+<li><strong>Staged</strong>: 暂存状态. 执行<code>git commit</code>则将修改同步到库中, 这时库中的文件和本地文件又变为一致, 文件为<code>Unmodify</code>状态. 执行<code>git reset HEAD filename</code>取消暂存, 文件状态为<code>Modified</code></li>
+</ul>
+<h3 id="6-查看命令"><a href="#6-查看命令" class="headerlink" title="6. 查看命令"></a>6. 查看命令</h3><ol>
+<li><p><code>git status</code>：查看仓库状态</p>
+</li>
+<li><p><code>git diff XX</code>：查看 XX 文件相对于暂存区修改了哪些内容</p>
+<blockquote>
+<p>当工作区有改动，临时区为空，diff 的对比是“工作区与最后一次 commit 提交的仓库的共同文件”；当工作区有改动，临时区不为空，diff 对比的是“工作区与暂存区的共同文件”</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="7-删除文件"><a href="#7-删除文件" class="headerlink" title="7. 删除文件"></a>7. 删除文件</h3><ol>
+<li><p>场景一：要删除的文件是没有修改过的，即和当前版本库文件的内容相同</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git rm &lt;file&gt;  # 删除工作区文件，并且将这次删除放入暂存区</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>此时<code>git commit</code>会删除工作区和版本库的文件</p>
+</blockquote>
+</li>
+<li><p>场景二：要删除的文件已经修改过，即和当前版本库文件的内容不相同</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">`git rm -f &lt;file&gt; ` # 强制删除工作区和暂存区文件，并且将这次删除放入暂存区</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>此时<code>git commit</code>会删除工作区和版本库的文件</p>
+</blockquote>
+</li>
+<li><p>场景三：想把文件从暂存区域移除，但仍然希望保留在当前工作目录中，换句话说，仅是从跟踪清单中删除</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git rm --cached &lt;file&gt; # 删除暂存区文件，但保留工作区的文件，并且将这次删除放入暂存区。</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>此时<code>git commit</code>会导致删除了暂存区和版本库的文件，但保留了工作区的文件</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="8-撤销修改"><a href="#8-撤销修改" class="headerlink" title="8. 撤销修改"></a>8. 撤销修改</h3><ol>
+<li><p>场景一：修改了工作区，未添加到暂存区时，想丢弃本地修改</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git checkout -- file  # 把文件从暂存区域复制到工作区</span><br><span class="line">注意：此时暂存区&lt;file&gt;文件版本为空</span><br></pre></td></tr></table></figure></li>
+<li><p>场景二：修改了工作区，且添加到了暂存区时，想丢弃本地修改</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">方法一：</span><br><span class="line"><span class="number">1</span>. `git <span class="keyword">reset</span> HEAD file`  # 先 取消暂存,就回到了场景一;</span><br><span class="line"><span class="number">2</span>. `git checkout -- file` # 再 把文件从暂存区域复制到工作区</span><br><span class="line"></span><br><span class="line">注意：此时暂存区&lt;file&gt;文件版本为空，这时用暂存区的版本覆盖工作区的版本，则会丢弃本地修改</span><br><span class="line"></span><br><span class="line">方法二（常用）：</span><br><span class="line"><span class="number">1</span>.git <span class="keyword">restore</span> --staged &lt;file&gt;：先 用暂存区的版本覆盖工作区的版本，并将&lt;file&gt;文件的暂存区版本从暂存区移除</span><br><span class="line"><span class="number">2</span>.git <span class="keyword">restore</span> &lt;file&gt;：再 用暂存区的版本覆盖工作区的版本</span><br><span class="line"></span><br><span class="line">注意：此时暂存区&lt;file&gt;文件版本为空，这时用暂存区的版本覆盖工作区的版本，则会丢弃本地修改</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>git reset</code>命令既可以回退版本，也可以把暂存区的修改回退到工作区。<strong>当我们用<code>HEAD</code>时，表示最新的版本</strong></p>
+</blockquote>
+</li>
+<li><p>场景三：把暂存区的操作提交到了本地 git 库, 想要撤销本次提交</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="keyword">reset</span> --hard ORIG_HEAD  # 强制回滚到未删除版本</span><br></pre></td></tr></table></figure></li>
+<li><p>场景四：把本地 git 库的删除记录推送到了远程服务器 github</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>. git <span class="keyword">reset</span> --hard ORIG_HEAD  # 先 强制回滚到未删除版本</span><br><span class="line"><span class="number">2</span>. git push -f 				   # 再 强制推送</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="9-版本回退"><a href="#9-版本回退" class="headerlink" title="9. 版本回退"></a>9. 版本回退</h3><h4 id="9-1-查看版本"><a href="#9-1-查看版本" class="headerlink" title="9.1 查看版本"></a>9.1 查看版本</h4><ol>
+<li><p><code>git log</code>：查看当前分支的所有提交版本（结点） 按英文 q 可退出查看状态</p>
+<blockquote>
+<p><code>git log --pretty=oneline</code>：用一行来显示</p>
+</blockquote>
+</li>
+<li><p><code>git reflog</code>：查看 HEAD 指针的移动历史（包括被回滚的版本）</p>
+<blockquote>
+<p><code>git log</code> 与<code>git reflog</code> 的区别：</p>
+<p><code>git log</code> 只会查看当前结点之前在一条分支上的结点</p>
+<p><code>git reflog</code> 会显示 HEAD 指针的移动历史，会包括所有结点</p>
+</blockquote>
+</li>
+</ol>
+<h4 id="9-2-具体场景"><a href="#9-2-具体场景" class="headerlink" title="9.2 具体场景"></a>9.2 具体场景</h4><p>想象这种情况，如果你在 2 天前提交了一个东西，突然发现这次提交是有问题的，这个时候你有两个选择，要么使用 git revert（推荐），要么使用 git reset。</p>
+<p><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/image-20230217102408912.png" alt="image-20230217102408912"></p>
+<ul>
+<li><p><strong>上图可以看到 git reset 是会修改版本历史的，他会丢弃掉一些版本历史。</strong></p>
+<p><strong>而 git revert 是根据那个 commit 逆向生成一个新的 commit，版本历史是不会被破坏的。</strong></p>
+<ul>
+<li><p><strong><code>git revert</code>是用一次新的<code>commit</code>来回滚之前的<code>commit</code></strong></p>
+<blockquote>
+<p>比如，我们<code>commit</code>了三个版本（版本一、版本二、 版本三），突然发现版本二有 bug，想要撤销版本二，但又不想影响撤销版本三的提交，就可以用 git revert 命令来反做版本二，生成新的版本四，这个版本四里会保留版本三的东西，但撤销了版本二的东西。</p>
+</blockquote>
+</li>
+<li><p><strong><code>git reset</code>是直接将 HEAD 指向的位置改变为之前存在的某个版本, 且目标版本之后提交的版本都会删除</strong></p>
+</li>
+</ul>
+</li>
+<li><p><strong>已经 push 到远程仓库的 commit 不允许 reset</strong>。上面已经讲了，<code>git reset</code>是会丢弃掉<code>commit</code>的，如果<code>commit</code>已经被<code>push</code>到远程仓库上了，也就意味着其他开发人员就可能基于这个<code>commit</code>形成了新的<code>commit</code>，这时你去<code>reset</code>，就会造成其他开发人员的提交历史莫名其妙的丢失，或者其他灾难性的后果。</p>
+</li>
+</ul>
+<h4 id="9-3-具体命令"><a href="#9-3-具体命令" class="headerlink" title="9.3 具体命令"></a>9.3 具体命令</h4><ol>
+<li><code>git reset --hard HEAD^</code> 或<code>git reset --hard HEAD~</code> ：将代码库回滚到上一个版本</li>
+<li><code>git reset --hard HEAD^^</code>：往上回滚两次，以此类推</li>
+<li><code>git reset --hard HEAD~100</code>：往上回滚 100 个版本</li>
+<li><code>git reset --hard 版本号</code>：回滚到某一特定版本 <strong>版本号取前七位</strong></li>
+<li><code>git revert -n 版本号</code>：反做之前某一特定版本</li>
+</ol>
+<h4 id="9-4-checkout-与-reset-的区别"><a href="#9-4-checkout-与-reset-的区别" class="headerlink" title="9.4 checkout 与 reset 的区别"></a>9.4 checkout 与 reset 的区别</h4><h5 id="checkout"><a href="#checkout" class="headerlink" title="checkout"></a>checkout</h5><ul>
+<li><p>当你 checkout 分支的时候，git 做了这么三件事情</p>
+<ol>
+<li>将 HEAD 指向那个分支的最后一次 commit</li>
+<li>将 HEAD 指向的 commit 里所有文件的 snapshot 替换掉 Index 区域里原来的内容</li>
+<li>将 Index 区域里的内容填充到 Working Directory 里</li>
+</ol>
+<p>所以你可以发现，HEAD、Index、Working Directory 这个时候里的内容都是一模一样的。</p>
+<p>注意：一般会误解为，Index 中的内容是空的，只有 git add 后才会有东西。实际上不是，Index 里一直是有东西的。</p>
+<p>所以，Git 的所有操作就是对这三个区域的状态（或内容）的操作。</p>
+</li>
+<li><p><strong>带文件参数时</strong></p>
+<p>当执行 git checkout [branch] file 时，checkout 干了这件事情：</p>
+<ol>
+<li>更新了 index 区域里 file 文件的内容</li>
+<li>更新了 working directory 里 file 文件的内容</li>
+</ol>
+</li>
+</ul>
+<h5 id="reset"><a href="#reset" class="headerlink" title="reset"></a>reset</h5><ul>
+<li><p>不带文件参数的 reset</p>
+<p>Git 有三个区域，Git 的所有操作实际上是在操作这三个区域的状态（或内容）。git reset 配合不同的参数，对这三个区域会产生不同的影响。</p>
+<p><code>reset</code>实际上有 3 个步骤，根据不同的参数可以决定执行到哪个步骤(<code>--soft</code>, <code>--mixed</code>, <code>--hard</code>)。</p>
+<ol>
+<li>改变 HEAD 所指向的 commit(<code>--soft</code>)</li>
+<li>执行第 1 步，将 Index 区域更新为 HEAD 所指向的 commit 里包含的内容(<code>--mixed</code>)</li>
+<li>执行第 1、2 步，将 Working Directory 区域更新为 HEAD 所指向的 commit 里包含的内容(<code>--hard</code>)</li>
+</ol>
+</li>
+<li><p><strong>带文件参数时的不带文件参数的 reset</strong></p>
+<p>上面讲到的 git reset 实际上不带参数的，如果带上文件参数，那么效果会是怎样的？</p>
+<ol>
+<li>HEAD 不会动</li>
+<li>将那个 commit 的 snapshot 里的那个文件放到 Index 区域中</li>
+</ol>
+<p>需要注意的是带文件参数的 git reset 没有–hard, –soft 这两个参数。只有–mixed 参数。</p>
+</li>
+</ul>
+<h5 id="二者区别"><a href="#二者区别" class="headerlink" title="二者区别"></a>二者区别</h5><p><code>reset --hard</code>和<code>checkout</code>貌似很像，都将 HEAD、Index、Working Directory 三个区域的内容整成了一样的，但也是有区别的：</p>
+<ol>
+<li>reset 会把 working directory 里的所有内容都更新掉</li>
+<li>checkout 不会去修改你在 Working Directory 里修改过的文件</li>
+<li>reset 把 branch 移动到 HEAD 指向的地方</li>
+<li>checkout 则把 HEAD 移动到另一个分支</li>
+</ol>
+<p>第二个区别可能有点难以理解，举例来说：假设你有两个分支 master 和 develop，这两个分支指向不一样的 commit，我们现在在 develop 分支上（HEAD 指向的地方）</p>
+<p>如果我们<code>git reset master</code>，那么 develop 就会指向 master 所指向的那个 commit。</p>
+<p>如果我们<code>git checkout master</code>，那么 develop 不会动，<strong>只有 HEAD 会移动</strong>。HEAD 会指向 master。看图：</p>
+<p><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/image-20230217104858327.png"></p>
+<h3 id="10-分支相关"><a href="#10-分支相关" class="headerlink" title="10. 分支相关"></a>10. 分支相关</h3><h4 id="10-1-查看分支"><a href="#10-1-查看分支" class="headerlink" title="10.1 查看分支"></a>10.1 查看分支</h4><ol>
+<li><code>git branch</code>：查看所有分支和当前所处分支</li>
+</ol>
+<h4 id="10-2-创建分支"><a href="#10-2-创建分支" class="headerlink" title="10.2 创建分支"></a>10.2 创建分支</h4><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/image-20230217075830346.png" alt="image-20230217075830346" style="zoom: 60%;" />
+
+<ol>
+<li><p><code>git branch branch_name</code>：创建新分支</p>
+<blockquote>
+<p>在 master 分支的后面新建一个 dev 分支</p>
+</blockquote>
+</li>
+<li><p><code>git checkout -b branch_name</code>：创建并切换到<code>branch_name</code>这个分支</p>
+<blockquote>
+<p>在 master 分支的后面新建一个 dev 分支,且 head 指向该分支</p>
+</blockquote>
+</li>
+</ol>
+<h4 id="10-3-删除分支"><a href="#10-3-删除分支" class="headerlink" title="10. 3 删除分支"></a>10. 3 删除分支</h4><ol>
+<li><p><code>git branch -d branch_name</code>：删除本地仓库的<code>branch_name</code>分支</p>
+<blockquote>
+<p>需要当前分支为其他分支 才可以删除<code>branch_name</code>分支</p>
+</blockquote>
+</li>
+<li><p><code>git push -d origin branch_name</code>：删除远程仓库的<code>branch_name</code>分支</p>
+<blockquote>
+<p><code>origin</code>代表云端的意思</p>
+</blockquote>
+</li>
+</ol>
+<h4 id="10-4-切换分支"><a href="#10-4-切换分支" class="headerlink" title="10.4 切换分支"></a>10.4 切换分支</h4><ol>
+<li><p><code>git checkout branch_name</code>：切换到<code>branch_name</code>这个分支</p>
+</li>
+<li><p><code>git checkout HEAD</code> : 切换到当前分支的某一版本</p>
+<blockquote>
+<p>HEAD 为<code>git log</code> 打印的某一版本的前 7 位版本号</p>
+</blockquote>
+<p>此时通过<code>git branch</code>查看分支，结果如下：</p>
+<p><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/image-20230307184705916.png" alt="image-20230307184705916"></p>
+<p>若在此版本的基础上<code>git commit</code>了一个版本，</p>
+<p>然后<code>git branch</code>查看分支，结果如下：</p>
+<p><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/image-20230307184300888.png" alt="image-20230307184300888"></p>
+<p>若想提交在<code>f22f58e</code>的基础上提交的版本<code>f79692e</code></p>
+<p>则需要进行如下操作：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git branch temp f79692e  // 1. 依据快照f79692e 创建 temp 分支</span><br><span class="line">git checkout master      // 2. 切换到 master 分支</span><br><span class="line">git merge temp           // 3. 将 temp 分支合并到 master分支</span><br></pre></td></tr></table></figure>
+
+<p>这里合并的时候多半要解决冲突。</p>
+</li>
+</ol>
+<h4 id="10-5-合并分支"><a href="#10-5-合并分支" class="headerlink" title="10.5 合并分支"></a>10.5 合并分支</h4><ol>
+<li><p><code>git merge branch_name</code>：将分支<code>branch_name</code>合并到当前分支上</p>
+<p><strong>当 master 分支和 dev 分支都对同一文件进行了修改 会导致合并冲突 。</strong><br><strong>例如：</strong></p>
+<p>在 readme.txt 文件中</p>
+<p>master 分支在该文件中加了‘999‘一行文字 并进行了可持续化<img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/image-20230217081440124.png" alt="image-20230217081440124" style="zoom: 67%;" /></p>
+<p>dev 分支在该文件中加了’888‘一行文字 并进行了可持续化<img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/image-20230217081633316.png" alt="image-20230217081633316" style="zoom:67%;" /></p>
+<p>总体上的结果如下：</p>
+ <img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/image-20230217081743616.png" alt="image-20230217081743616" style="zoom:50%;" />
+
+<p>此时将 dev 分支合并到 master 分支上会导致冲突，</p>
+<p>打开 readme.txt: <img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/image-20230217081933833.png" alt="image-20230217081933833" style="zoom: 67%;" /></p>
+<p>HEAD 表示 head 所指的 master 分支里修改的内容，dev2 表示 dev2 分支里修改的内容</p>
+<p>对该文件进行手动修改 ，**不需要重新<code>git merger dev</code>**，直接可持续化即可：<img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/image-20230217082149555.png" alt="image-20230217082149555" style="zoom:67%;" /></p>
+<p><strong>手动修改后并可持续化后，会在 master 分支上分别增加了<code>add 888</code>,<code>add 999</code>,以及<code>处理冲突的结点</code>，共三个结点，过程如下如下：</strong></p>
+<p><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/image-20230217081743616.png" alt="image-20230217081743616" style="zoom:50%;" /> ====》<img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/image-20230217082944739.png" alt="image-20230217082944739" style="zoom: 50%;" /></p>
+</li>
+<li><p><code>git pull</code>：将远程仓库的当前分支与本地仓库的当前分支合并 即拉取云端的内容</p>
+<blockquote>
+<p><code>git pull origin branch_name</code>：将远程仓库的<code>branch_name</code>分支与本地仓库的当前分支合并</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="11-远程仓库"><a href="#11-远程仓库" class="headerlink" title="11. 远程仓库"></a>11. 远程仓库</h3><h4 id="11-1-本地与云端关联"><a href="#11-1-本地与云端关联" class="headerlink" title="11.1 本地与云端关联"></a>11.1 本地与云端关联</h4><ol>
+<li><code>git remote add origin git@git.acwing.com:xxx/XXX.git</code>：将本地<strong>仓库关联</strong>到远程仓库</li>
+</ol>
+<h4 id="11-2-本地推送到云端"><a href="#11-2-本地推送到云端" class="headerlink" title="11.2 本地推送到云端"></a>11.2 本地推送到云端</h4><ol>
+<li><p><code>git push [-u] (第一次需要-u以后不需要)</code> ：将当前分支<strong>推送</strong>到远程仓库</p>
+<blockquote>
+<ol>
+<li><p><code>git push origin branch_name</code>：将本地的某个分支推送到远程仓库</p>
+</li>
+<li><p><code>git push --set-upstream origin branch_name</code>：若远程仓库无该 branch_name 分支，则可使用该命令在远程仓库创建该分支并同步</p>
+</li>
+<li><p><code>git push -d origin branch_name</code>：删除远程仓库的<code>branch_name</code>分支</p>
+</li>
+</ol>
+</blockquote>
+</li>
+</ol>
+<h4 id="11-3-云端拉取到本地"><a href="#11-3-云端拉取到本地" class="headerlink" title="11.3 云端拉取到本地"></a>11.3 云端拉取到本地</h4><ol>
+<li><p><code>git pull</code> ：将远程仓库的当前分支与本地仓库的当前分支合并 即<strong>拉取</strong>云端的内容</p>
+</li>
+<li><p>场景一 ：用云端的<code>branch_name</code>分支与本地的 master 分支进行合并：</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git pull origin branch_name  # 将远程仓库的`branch_name`分支与本地仓库的当前分支合并</span><br></pre></td></tr></table></figure></li>
+<li><p>场景二：只拉取云端的的<code>dev</code>分支，不合并到<code>本地的master分支</code></p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">方法一:</span><br><span class="line"><span class="number">1</span>. git branch branch_name1  # 先 本地创建branch_name1新分支</span><br><span class="line"></span><br><span class="line"><span class="number">2</span>. git branch --set-upstream-<span class="keyword">to</span>=origin/branch_name1 branch_name2 # 再 将云端的branch_name1分支与本地的branch_name2分支对应</span><br><span class="line"></span><br><span class="line"><span class="number">3</span>. git pull   # 最后 拉取云端的内容</span><br><span class="line"></span><br><span class="line">方法二：</span><br><span class="line">git checkout -t origin/branch_name 将远程的branch_name分支拉取到本地</span><br></pre></td></tr></table></figure></li>
+<li><p><code>git checkout -t origin/branch_name</code> ：将远程的<code>branch_name</code><strong>分支拉取</strong>到本地</p>
+</li>
+<li><p><code>git clone git@git.acwing.com:xxx/XXX.git</code>： 将<strong>远程仓库 XXX 下载</strong>到当前目录下</p>
+</li>
+</ol>
+<h3 id="12-stash-缓存"><a href="#12-stash-缓存" class="headerlink" title="12. stash 缓存"></a>12. stash 缓存</h3><h4 id="12-1-应用场景"><a href="#12-1-应用场景" class="headerlink" title="12.1 应用场景"></a>12.1 应用场景</h4><p>当我们开发一个新功能时会先从 master 拉出一个分支 dev，然后在这个 dev 分支下开始写代码开发新功能，就在此时，线上版本 master 出现了 bug，我们应该放下手头上新功能的开发工作先将 master 上的 bug 修复，这个时候 dev 分支下的改动怎么处理？</p>
+<ul>
+<li>方案 1：向 dev 分支提交新功能的代码，然后再切换到 master 下</li>
+<li>方案 2：直接切换到 master 分支下</li>
+</ul>
+<p>首先我们新功能的代码还没开发完成，其次新功能这里还有一些 bug 没解决，就这样把有问题的代码提交到 dev 分支中，虽然可以解决目前我们的处境但不是很妥；但是第二种方案，直接切换，明显更不妥。怎么办？我们好像陷入了困境……</p>
+<p>别急，Git 提供了一个**<code>git stash</code>命令<strong>恰好可以完美解决该问题, 其将当前未提交的修改(即，工作区的修改和暂存区的修改)先暂时储藏起来，这样工作区干净了后，就可以切换切换到 master 分支下拉一个 fix 分支。在完成线上 bug 的修复工作后，</strong>重新切换到 dev 分支<strong>下通过</strong><code>git stash pop</code>**命令将之前储藏的修改取出来，继续进行新功能的开发工作。</p>
+<blockquote>
+<p>注意：<code>git stash pop</code>之前需要重新回到 dev 分支</p>
+</blockquote>
+<h4 id="12-2-相关命令"><a href="#12-2-相关命令" class="headerlink" title="12.2 相关命令"></a>12.2 相关命令</h4><ol>
+<li><code>git stash</code>：将工作区和暂存区中尚未提交的修改存入栈中</li>
+<li><code>git stash list</code>：查看栈中所有元素</li>
+<li><code>git stash apply</code>：将栈顶存储的修改恢复到当前分支，但不删除栈顶元素</li>
+<li><code>git stash drop</code>：删除栈顶存储的修改</li>
+<li><code>git stash pop</code>：将栈顶存储的修改恢复到当前分支，同时删除栈顶元素</li>
+</ol>
+<h3 id="13-协作开发"><a href="#13-协作开发" class="headerlink" title="13. 协作开发"></a>13. 协作开发</h3><p>远程仓库上一个 master 分支，一个 dev 分支</p>
+<p>Friend：通过<code>git clone</code>下来的只有 master 分支，需要在本地<code>git checkout -t origin/dev </code>将远程的 dev 分支拉取到本地。</p>
+<p><strong>应用场景：</strong></p>
+<p>Friend：对 readme.txt 做了修改，并 push 到了云端。</p>
+<p>Me：若 Me 也想对 readme.txt 做了修改，需要先<code>git pull</code>拉取一下云端的最新内容才行，不然 Me 修改后 push 会产生冲突。</p>
+<p><strong>删除本地项目命令</strong></p>
+<p><code>rm project rf</code></p>
+<h2 id="thrift"><a href="#thrift" class="headerlink" title="thrift"></a>thrift</h2><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/image-20230217190234823.png" alt="image-20230217190234823" style="zoom:67%;" />
+
+<p>rpc：远程过程调用(remote procedure call)</p>
+<h2 id="管道、环境变量与常用命令"><a href="#管道、环境变量与常用命令" class="headerlink" title="管道、环境变量与常用命令"></a>管道、环境变量与常用命令</h2><h3 id="1-管道"><a href="#1-管道" class="headerlink" title="1. 管道"></a>1. 管道</h3><h4 id="1-1-概念"><a href="#1-1-概念" class="headerlink" title="1.1 概念"></a>1.1 概念</h4><p>管道是一种通信机制，通常用于进程间的通信（也可通过 socket 进行网络通信），它表现出来的形式将前面每一个进程的输出（stdout）直接作为下一个进程的输入（stdin）。</p>
+<img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/image-20230218083029165.png" alt="image-20230218083029165" style="zoom:67%;" />
+
+<p>例子：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -name <span class="string">&#x27;*.py&#x27;</span> | xargs cat | wc -l  <span class="comment"># 统计当前目录下所有python文件的总行数</span></span><br></pre></td></tr></table></figure>
+
+<p>其他命令见下文<strong>常见命令</strong></p>
+<h4 id="1-2-要点"><a href="#1-2-要点" class="headerlink" title="1.2 要点"></a>1.2 要点</h4><ul>
+<li>管道命令仅处理 stdout，会忽略 stderr。</li>
+<li>管道右边的命令必须能接受 stdin。</li>
+<li>多个管道命令可以串联。</li>
+</ul>
+<h4 id="1-3-与文件重定向的区别"><a href="#1-3-与文件重定向的区别" class="headerlink" title="1.3 与文件重定向的区别"></a>1.3 与文件重定向的区别</h4><ul>
+<li>文件重定向左边为命令，右边为文件。</li>
+<li>管道左右两边均为命令，左边有 stdout，右边有 stdin</li>
+</ul>
+<h3 id="2-环境变量"><a href="#2-环境变量" class="headerlink" title="2.环境变量"></a>2.环境变量</h3><h4 id="2-1-概念"><a href="#2-1-概念" class="headerlink" title="2.1 概念"></a>2.1 概念</h4><p>Linux 系统中会用很多环境变量来记录配置信息。<br>环境变量类似于全局变量，可以被各个进程访问到。我们可以通过修改环境变量来方便地修改系统配置。</p>
+<h4 id="2-2-查看"><a href="#2-2-查看" class="headerlink" title="2.2 查看"></a>2.2 查看</h4><p>列出当前环境下的所有环境变量：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">env  <span class="comment"># 显示当前用户的变量</span></span><br><span class="line"><span class="built_in">set</span>  <span class="comment"># 显示当前shell的变量，包括当前用户的变量;</span></span><br><span class="line"><span class="built_in">export</span>  <span class="comment"># 显示当前导出成用户变量的shell变量</span></span><br></pre></td></tr></table></figure>
+
+<p>输出某个环境变量的值：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="variable">$PATH</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="2-3-修改"><a href="#2-3-修改" class="headerlink" title="2.3 修改"></a>2.3 修改</h4><p>环境变量的定义、修改、删除操作可以参考<a href="">shell 语法——变量</a>这一节的内容。</p>
+<p>为了将对环境变量的修改应用到未来所有环境下，可以将修改命令放到<code>~/.bashrc</code>文件中。<br>修改完<code>~/.bashrc</code>文件后，记得执行<code>source ~/.bashrc</code>，来将修改应用到当前的<code>bash</code>环境下。</p>
+<p>为何将修改命令放到<code>~/.bashrc</code>，就可以确保修改会影响未来所有的环境呢？</p>
+<ul>
+<li>每次启动<code>bash</code>，都会先执行<code>~/.bashrc</code>。</li>
+<li>每次<code>ssh</code>登陆远程服务器，都会启动一个<code>bash</code>命令行给我们。</li>
+<li>每次<code>tmux</code>新开一个<code>pane</code>，都会启动一个<code>bash</code>命令行给我们。</li>
+<li>所以未来所有新开的环境都会加载我们修改的内容。</li>
+</ul>
+<h4 id="2-4-常见环境变量"><a href="#2-4-常见环境变量" class="headerlink" title="2.4 常见环境变量"></a>2.4 常见环境变量</h4><ol>
+<li><p><code>HOME</code>：用户的家目录。</p>
+</li>
+<li><p><code>PATH</code>：可执行文件（命令）的存储路径。路径与路径之间用<code>:</code>分隔。当某个可执行文件同时出现在多个路径中时，会选择从左到右数第一个路径中的执行。<strong>下列所有存储路径的环境变量，均采用从左到右的优先顺序</strong>。</p>
+<p>例子：</p>
+<p>下图为在<code>~/.bashrc</code>添加一个可执行文件（命令）的存储路径，需要注意以下几点：</p>
+<ul>
+<li>写在<code>.bashrc</code>文件内容的最下方，这样可以覆盖上面的</li>
+<li>路径之间用<code>:</code>分隔</li>
+<li>添加的新路径之后需要加上之前所有的 PATH 路径，即最后需加上<code>$PATH</code></li>
+<li>文件目录添加到当前命令所在文件夹即可</li>
+</ul>
+<p><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/image-20230218082757919.png" alt="image-20230218082757919"></p>
+</li>
+<li><p><code>LD_LIBRARY_PATH</code>：用于指定动态链接库(.so 文件)的路径，其内容是以冒号分隔的路径列表。</p>
+<blockquote>
+<ol>
+<li><p><strong>静态库与动态库</strong></p>
+<p><strong>静态库</strong>：这类库的名字一般是 libxxx.a,在使用静态库的情况下，在编译链接可执行文件时，链接器从静态库中复制这些函数和数据，并把它们和应用程序的其他模块组合起来创建最终的可执行文件（.exe）。当发布产品时，只需要发布这个可执行文件，并不需要发布被使用的静态库。</p>
+<p><strong>动态库</strong>：是一种不可执行的二进制程序文件，它允许程序共享执行特殊任务所必需的代码和其他资源。Windows 平台上动态链接库的后缀名是”.dll”，Linux 平台上的后缀名是“.so”。Linux 上动态库一般是 libxxx.so;相对于静态函数库，动态函数库在编译的时候并没有被编译进目标代码中，你的程序执行到相关函数时才调用该函数库里的相应函数，因此动态函数库所产生的可执行文件比较小。由于函数库没有被整合进你的程序，而是程序运行时动态的申请并调用，所以程序的运行环境中必须提供相应的库。动态函数库的改变并不影响你的程序，所以动态函数库的升级比较方便。</p>
+</li>
+<li><p><strong>动态链接库的优点</strong></p>
+</li>
+</ol>
+<ul>
+<li><strong>复用性：</strong>DLL 的编制与具体的编程语言以及编译器无关，不同语言编写的程序只要按照函数调用约定就可以调用同一个 DLL 函数</li>
+<li><strong>可扩展性：</strong>DLL 文件与 EXE 文件独立，只要接口不变，升级程序只需更新 DLL 文件不需要重新编译应用程序</li>
+<li><strong>节省内存：</strong>如果多个应用程序使用同一个 dll，该 dll 的页面只需要存入内存一次，所有的应用程序都可以共享它的页面，从而节省内存</li>
+</ul>
+</blockquote>
+</li>
+<li><p><code>C_INCLUDE_PATH</code>：C 语言的头文件路径，内容是以冒号分隔的路径列表。</p>
+</li>
+<li><p><code>CPLUS_INCLUDE_PATH</code>：CPP 的头文件路径，内容是以冒号分隔的路径列表。</p>
+</li>
+<li><p><code>PYTHONPATH</code>：Python 导入包的路径，内容是以冒号分隔的路径列表。</p>
+</li>
+<li><p><code>JAVA_HOME</code>：jdk 的安装目录。</p>
+</li>
+<li><p><code>CLASSPATH</code>：存放 Java 导入类的路径，内容是以冒号分隔的路径列表。</p>
+</li>
+</ol>
+<h3 id="3-常见命令"><a href="#3-常见命令" class="headerlink" title="3. 常见命令"></a>3. 常见命令</h3><h4 id="3-1-系统状况"><a href="#3-1-系统状况" class="headerlink" title="3.1 系统状况"></a>3.1 系统状况</h4><ol>
+<li><p><code>top</code>：查看所有进程的信息（Linux 的任务管理器）</p>
+<ul>
+<li>打开后，输入<code>M</code>：按使用内存排序</li>
+<li>打开后，输入<code>P</code>：按使用 CPU 排序</li>
+<li>打开后，输入<code>q</code>：退出</li>
+</ul>
+</li>
+<li><p><code>df -h</code>：查看硬盘使用情况</p>
+</li>
+<li><p><code>free -h</code>：查看内存使用情况</p>
+</li>
+<li><p><code>du -sh</code>：查看当前目录占用的硬盘空间</p>
+</li>
+<li><p><code>ps aux</code>：查看所有进程</p>
+<ul>
+<li><code>ps aux | grep match-server </code> 利用管道对进程进行筛选，查看所有进程中名为<code>match-server</code>的进程</li>
+</ul>
+</li>
+<li><p><code>kill -9 pid</code>：杀死编号为 pid 的进程</p>
+<ul>
+<li><p>传递某个具体的信号：<code>kill -s SIGTERM pid</code> ，<code>SIGTERM</code>对应<code>-15</code> ，<code>-s</code>指定发送信号</p>
+</li>
+<li><p>信号列表</p>
+<img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/image-20230218093022557.png" alt="image-20230218093022557" style="zoom:50%;" /></li>
+</ul>
+</li>
+<li><p><code>netstat -nt</code>：查看所有网络连接</p>
+</li>
+<li><p><code>w</code>：列出当前登陆的用户</p>
+</li>
+<li><p><code>logout</code>：退出当前用户登录</p>
+</li>
+<li><p><code>ping www.baidu.com</code>：检查是否连网</p>
+</li>
+</ol>
+<h4 id="3-2-文件权限"><a href="#3-2-文件权限" class="headerlink" title="3.2 文件权限"></a>3.2 文件权限</h4><ol>
+<li><p><code>chmod</code>：修改文件权限</p>
+<ul>
+<li><p><code>chmod +x xxx</code>：给 xxx 添加可执行权限</p>
+</li>
+<li><p><code>chmod -x xxx</code>：去掉 xxx 的可执行权限</p>
+</li>
+</ul>
+</li>
+</ol>
+<ul>
+<li><p><code>chmod 777 xxx</code>：将 xxx 的权限改成 777</p>
+</li>
+<li><p><code>chmod 777 xxx -R</code>：递归修改整个文件夹的权限</p>
+<ul>
+<li><p><code>chmod +r * -R</code>：给当前目录下的所有文件添加可读权限</p>
+<blockquote>
+<p>-R 对当前目录中的所有文件和子目录进行相同的权限更改</p>
+</blockquote>
+</li>
+</ul>
+ <img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/image-20230218094748691.png" alt="image-20230218094748691" style="zoom:50%;" /> 
+ 
+<blockquote>
+<p>r:读;w:写;x:可执行</p>
+</blockquote>
+</li>
+</ul>
+<h4 id="3-3-文件检索"><a href="#3-3-文件检索" class="headerlink" title="3.3 文件检索"></a>3.3 文件检索</h4><ol>
+<li><p><code>find /path/to/directory/ -name &#39;*.py&#39;</code>：搜索某个文件路径下的所有<code>*.py</code>文件</p>
+<blockquote>
+<p><code>find . -name &#39;*.py&#39;</code> ： <code>.</code> 代表当前目录下</p>
+</blockquote>
+</li>
+<li><p><code>grep xxx</code>：从<code>stdin</code>中读入若干行数据，如果某行中包含<code>xxx</code>，则输出该行；否则忽略该行。起过滤功能。</p>
+<ul>
+<li><code>ps aux | grep match-server </code> 利用管道对进程进行筛选，查看所有进程中名为<code>match-server</code>的进程</li>
+</ul>
+</li>
+<li><p><code>wc</code>：统计行数、单词数、字节数</p>
+<ul>
+<li>既可以从<code>stdin</code>中直接读入内容；也可以在命令行参数中传入文件名列表；</li>
+<li><code>wc -l</code>：统计行数</li>
+<li><code>wc -w</code>：统计单词数</li>
+<li>`wc -c</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -name <span class="string">&#x27;*.cpp&#x27;</span> | wc -l &gt; ans.txt <span class="comment"># 统计当前目录下共有多少个以.cpp结尾的文件，将结果写入ans.txt中</span></span><br></pre></td></tr></table></figure></li>
+<li><p><code>tree</code>：展示当前目录的文件结构</p>
+<ul>
+<li><code>tree /path/to/directory/</code>：展示某个目录的文件结构</li>
+<li><code>tree -a</code>：展示隐藏文件</li>
+</ul>
+</li>
+<li><p><code>cut</code>：分割一行内容</p>
+<ul>
+<li>从<code>stdin</code>中读入多行数据</li>
+<li><code>echo $PATH | cut -d &#39;:&#39; -f 3,5</code>：输出 PATH 用:分割后第 3 和第 5<strong>列</strong>数据</li>
+<li><code>echo $PATH | cut -d &#39;:&#39; -f 3-5</code>：输出 PATH 用:分割后第 3 到第 5<strong>列</strong>数据</li>
+<li><code>echo $PATH | cut -c 3,5</code>：输出 PATH 的第 3 和第 5 个字符</li>
+<li><code>echo $PATH | cut -c 3-5</code>：输出 PATH 的第 3 到第 5 个字符</li>
+</ul>
+</li>
+<li><p><code>sort</code>：将每行内容按字典序排序</p>
+<ul>
+<li><p>可以从<code>stdin</code>中读取多行数据</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ls | sort</span><br><span class="line">find . -name <span class="string">&#x27;*.py&#x27;</span> | sort  <span class="comment"># 读文件路径</span></span><br><span class="line">cat scores.txt | cut -d <span class="string">&#x27; &#x27;</span> -f 1 | sort &gt; names.txt <span class="comment"># 读文件内容</span></span><br></pre></td></tr></table></figure></li>
+<li><p>可以从命令行参数中读取文件名列表</p>
+</li>
+</ul>
+</li>
+<li><p><code>xargs</code>：将<code>stdin</code>中的数据用空格或回车分割成命令行参数，<strong>将标准输入变成文件参数</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">eg:</span><br><span class="line"></span><br><span class="line">find . -name <span class="string">&#x27;*.py&#x27;</span> | xargs cat | wc -l  <span class="comment"># 统计当前目录下所有`python`文件的总行数</span></span><br><span class="line"></span><br><span class="line">find homework/lesson_6/ -name <span class="string">&#x27;*.cpp&#x27;</span> | xargs cat | grep <span class="string">&#x27;thrift&#x27;</span>  <span class="comment"># 检索`thrift `字符串，即在指定目录下显示包含`thrift`内容的行，但不显示该行所在文件</span></span><br><span class="line"></span><br><span class="line">find . -name <span class="string">&#x27;*.py&#x27;</span> | xargs rm  <span class="comment"># 删除当前目录下的所有.py文件</span></span><br></pre></td></tr></table></figure></li>
+<li><p><code>ag xxx</code>：搜索当前目录下的所有文件，检索<code>xxx</code>字符串，即在当前目录下显示包含<code>xxx</code>内容的行，且显示该行所在文件</p>
+<blockquote>
+<p>ag 和 grep 的区别 ：ag 不会区分大小写</p>
+</blockquote>
+</li>
+</ol>
+<h4 id="3-4-查看文件内容"><a href="#3-4-查看文件内容" class="headerlink" title="3.4 查看文件内容"></a>3.4 查看文件内容</h4><ol>
+<li><p><code>more</code>：浏览文件内容， <code>cat</code>是一下子显示所有，<code>more</code>是一页一页的显示</p>
+<ul>
+<li>回车：下一行</li>
+<li>空格：下一页</li>
+<li><code>b</code>：上一页</li>
+<li><code>q</code>：退出</li>
+</ul>
+</li>
+<li><p><code>less</code>：与<code>more</code>类似，功能更全</p>
+<ul>
+<li>回车：下一行</li>
+<li><code>y</code>：上一行</li>
+<li><code>Page Down</code>：下一页</li>
+<li><code>Page Up</code>：上一页</li>
+<li><code>q</code>：退出</li>
+</ul>
+</li>
+<li><p><code>head -3 xxx</code>：展示<code>xxx</code>的前 3 行内容</p>
+<ul>
+<li><p>同时支持从<code>stdin</code>读入内容</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps aux | head - 3 <span class="comment"># 显示进程列表的前三行</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p><code>tail -3 xxx</code>：展示 xxx 末尾 3 行内容</p>
+<ul>
+<li>同时支持从<code>stdin</code>读入内容</li>
+</ul>
+</li>
+</ol>
+<h4 id="3-5-用户相关"><a href="#3-5-用户相关" class="headerlink" title="3.5 用户相关"></a>3.5 用户相关</h4><ol>
+<li><code>history</code>：展示当前用户的历史操作。内容存放在<code>~/.bash_history</code>中</li>
+</ol>
+<h4 id="3-6-工具"><a href="#3-6-工具" class="headerlink" title="3.6 工具"></a>3.6 工具</h4><ol>
+<li><p><code>md5sum</code>：计算<code>md5</code>哈希值</p>
+<blockquote>
+<p>md5sum 计算检验 MD5 效验码。MD5 算法常常被用来验证网络文件传输的完整性，防止文件被人篡改。MD5 全称是报文摘要算法（Message-Digest Algorithm 5），此算法对任意长度的信息逐位进行计算，产生一个二进制长度为 128 位（十六进制长度就是 32 位）的“指纹”（或称“报文摘要”），不同的文件产生相同的报文摘要的可能性非常小。</p>
+</blockquote>
+<ul>
+<li>可以从<code>stdin</code>读入内容</li>
+<li>也可以在命令行参数中传入文件名列表 <code>md5sum scores.txt</code>；</li>
+</ul>
+</li>
+<li><p><code>time command</code>：统计<code>command</code>命令的执行时间</p>
+</li>
+<li><p><code>ipython3</code>：交互式<code>python3</code>环境。可以当做计算器，或者批量管理文件。</p>
+<ul>
+<li><code>! echo &quot;Hello World&quot;</code>：<code>!</code><strong>表示执行<code>shell</code>脚本</strong></li>
+</ul>
+</li>
+<li><p><code>watch -n 0.1 command</code>：每 0.1 秒执行一次<code>command</code>命令</p>
+</li>
+<li><p><code>tar</code>：压缩文件</p>
+<ul>
+<li><p><code>tar -zcvf xxx.tar.gz /path/to/file/*</code>：将 file 文件夹进行压缩</p>
+<blockquote>
+<p>file/有* 代表 file 里的所有文件压缩为一个包</p>
+</blockquote>
+</li>
+<li><p><code>tar -zxvf xxx.tar.gz</code>：解压缩</p>
+</li>
+</ul>
+</li>
+<li><p><code>diff xxx yyy</code>：查找文件<code>xxx</code>与<code>yyy</code>的不同点</p>
+</li>
+</ol>
+<h4 id="3-7-安装软件"><a href="#3-7-安装软件" class="headerlink" title="3.7 安装软件"></a>3.7 安装软件</h4><ol>
+<li><code>sudo command</code>：以<code>root</code>身份执行<code>command</code>命令</li>
+<li><code>apt-get install xxx</code>：安装软件</li>
+<li><code>pip install xxx --user --upgrade</code>：安装<code>python</code>包</li>
+</ol>
+<h2 id="云服务器配置与-Docker"><a href="#云服务器配置与-Docker" class="headerlink" title="云服务器配置与 Docker"></a>云服务器配置与 Docker</h2><h3 id="1-初始配置"><a href="#1-初始配置" class="headerlink" title="1. 初始配置"></a>1. 初始配置</h3><ol>
+<li><p>登录到新服务器。打开 AC Terminal，然后：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh root@公网ip <span class="comment"># 注意腾讯云登录的用户不是root，而是ubuntu</span></span><br></pre></td></tr></table></figure></li>
+<li><p>为防止 root 用户误操作安装了软件，所以最好新创建工作用户并赋予 sudo 权限，这样该用户每次安装东西，命令行前都要加个<code>sudo </code>,防止误操作。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">adduser chjm  <span class="comment"># 创建用户chjm</span></span><br><span class="line">sudo usermod -aG chjm  <span class="comment"># 给用户chjm分配sudo权限</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><code>su root</code> ：切换用户，从 chjm 切换到 root 用户</p>
+</li>
+<li><p><code>logout</code> ：退出当前用户登录</p>
+</li>
+<li><p>若在 chjm 用户下使用 sudo 报错<code>chjm is not in the sudoers file.  This incident will be reported.</code></p>
+<p>可在 root 用户下使用<code>sudo adduser chjm sudo</code>： 将用户名<code>chjm</code>添加到<code>sudoers</code>文件</p>
+</li>
+</ul>
+<blockquote>
+<p>腾讯云如果购买的是轻量级的应用服务器，ubuntu 版本是默认没有 root 用户的。默认用户是 ubuntu（可以在控制器中修改用户名），是默认拥有 sudo 权限的。若想添加新用户可用<code>sudo adduser chjm</code></p>
+</blockquote>
+</li>
+<li><p><strong>配置别名</strong></p>
+<p><strong>本地</strong>创建文件 <code>~/.ssh/config</code></p>
+<p>然后在文件中输入：</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Host alserver</span><br><span class="line">	HostName IP # ip地址或域名</span><br><span class="line">	User ubuntu #用户名</span><br><span class="line">	Port <span class="number">20000</span>	#端口 不加port默认是<span class="number">22</span></span><br><span class="line"></span><br><span class="line">Host txserver</span><br><span class="line">	HostName IP # ip地址或域名</span><br><span class="line">	User ubuntu #用户名</span><br></pre></td></tr></table></figure>
+
+<p>之后再使用服务器时，可以直接使用别名<code>alserver</code>、<code>txserver</code></p>
+</li>
+<li><p><strong>配置秘钥</strong></p>
+<p><strong>本地</strong>创建密钥：（配置秘钥与上面配置文件无关，上面配置文件只是起个别名 方便 ssh 连接）</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen</span><br></pre></td></tr></table></figure>
+
+<p>然后一直回车即可。</p>
+<p>执行结束后，<code>~/.ssh/</code>目录下会多两个文件：</p>
+<ul>
+<li><code>id_rsa</code>：私钥</li>
+<li><code>id_rsa.pub</code>：公钥</li>
+</ul>
+<p>之后想免密码登录哪个服务器，就将公钥传给哪个服务器即可。</p>
+<p>例如，想免密登录<code>myserver1</code>服务器。则将公钥中的内容，复制到<code>myserver1</code>中的<code>~/.ssh/authorized_keys</code>文件里即可。</p>
+<p>也可以在<strong>本地</strong>使用如下命令一键添加公钥：</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-copy-id txserver ## 将公钥添加到别名为txserver的服务器</span><br></pre></td></tr></table></figure></li>
+<li><p>安装 tmux, 登录自己的服务器，然后安装 tmux：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update <span class="comment"># 先升级</span></span><br><span class="line">sudo apt-get install tmux</span><br></pre></td></tr></table></figure></li>
+<li><p>将 AC Terminal 的配置传到新服务器上：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp .bashrc .vimrc .tmux.conf server_name:  <span class="comment"># server_name需要换成自己配置的别名</span></span><br></pre></td></tr></table></figure></li>
+<li><p>安装 docker，先打开 tmux。（养成好习惯，所有工作都在 tmux 里进行，防止意外关闭终端后，工作进度丢失）<br>然后在 tmux 中根据<a target="_blank" rel="noopener" href="https://docs.docker.com/engine/install/ubuntu/">docker</a>安装教程安装 docker 即可。</p>
+<blockquote>
+<p>docker –version 能查看到版本即表示安装成功</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="2-Docker"><a href="#2-Docker" class="headerlink" title="2. Docker"></a>2. <a target="_blank" rel="noopener" href="https://docs.docker.com/engine/install/linux-postinstall/">Docker</a></h3><blockquote>
+<p>镜像（<code>Image</code>）和容器（<code>Container</code>）的关系，就像是面向对象程序设计中的 <code>类</code> 和 <code>实例</code> 一样，镜像是静态的定义，容器是镜像运行时的实体。容器可以被创建、启动、停止、删除、暂停等。一个镜像（<code>Image</code>）可用生成多个容器（<code>Container</code>），容器内有配好的不同环境。</p>
+</blockquote>
+<h4 id="2-1-将当前用户添加到-docker-用户组"><a href="#2-1-将当前用户添加到-docker-用户组" class="headerlink" title="2.1 将当前用户添加到 docker 用户组"></a>2.1 将当前用户添加到 docker 用户组</h4><p>为了避免每次使用 docker 命令都需要加上 sudo 权限，可以将当前用户加入安装中自动创建的 docker 用户组(可以参考官方文档)：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo usermod -aG docker <span class="variable">$USER</span></span><br></pre></td></tr></table></figure>
+
+<p>执<strong>行完此操作后，需要退出服务器，再重新登录回来，才可以省去 sudo 权限。</strong></p>
+<h4 id="2-2-镜像（images）"><a href="#2-2-镜像（images）" class="headerlink" title="2.2 镜像（images）"></a>2.2 镜像（images）</h4><ol>
+<li><p><code>docker pull ubuntu:20.04</code>：拉取一个镜像</p>
+</li>
+<li><p><code>docker images</code>：列出本地所有镜像</p>
+</li>
+<li><p><code>docker image rm ubuntu:20.04 或 docker rmi ubuntu:20.04</code>：删除镜像<code>ubuntu:20.04</code></p>
+</li>
+<li><p><code>docker [container] commit CONTAINER IMAGE_NAME:TAG</code>：创建某个<code>container</code>的镜像</p>
+<blockquote>
+<ul>
+<li><p>[ ] 代表可选 可加 container 也可不加</p>
+<p><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/image-20230218192155526.png" alt="image-20230218192155526"></p>
+</li>
+<li><p>容器 CONTAINER 可用 CONTAINER _ID（a5d075b5ce28） 也可用 NAMES（ecstatic_chaplygin）</p>
+</li>
+<li><p>镜像 IMAGE_NAME:TAG 名称:版本号</p>
+</li>
+</ul>
+</blockquote>
+</li>
+<li><p><code>docker save -o ubuntu_20_04.tar ubuntu:20.04</code>：将镜像<code>ubuntu:20.04</code>导出到本地文件<code>ubuntu_20_04.tar</code>中</p>
+<blockquote>
+<ul>
+<li><p>生成后的<code>ubuntu_20_04.ta</code>需要使用<code>chmod +r ubuntu_20_04.tar</code>添加可读权限 这样别人才能读取</p>
+</li>
+<li><p>若想将该镜像传到其他服务器上，可使用</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">scp -r txserver:ubuntu_20_04.tar .    <span class="comment"># . 代表本地的当前路径下  在本地使用该命令</span></span><br><span class="line">scp -r ~/ubuntu_20_04.tar alserver:/home/  <span class="comment"># 再将本地的ubuntu_20_04.tar传到阿里云的服务器上</span></span><br></pre></td></tr></table></figure>
+
+<p>不能直接从一个服务器传到另外一个服务器</p>
+</li>
+</ul>
+</blockquote>
+</li>
+<li><p><code>docker load -i ubuntu_20_04.tar</code>：将镜像<code>ubuntu:20.04</code>从本地文件<code>ubuntu_20_04.tar</code>中加载出来</p>
+</li>
+</ol>
+<h4 id="2-3-容器-container"><a href="#2-3-容器-container" class="headerlink" title="2.3 容器(container)"></a>2.3 容器(container)</h4><ol>
+<li><p><code>docker [container] create -it ubuntu:20.04</code>：利用镜像<code>ubuntu:20.04</code>创建一个容器。</p>
+</li>
+<li><p><code>docker ps -a</code>：查看本地的所有容器</p>
+<ul>
+<li><code>docker ps</code>：查看所有运行的容器</li>
+</ul>
+</li>
+<li><p><code>docker [container] start CONTAINER</code>：启动容器</p>
+<blockquote>
+<p><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/image-20230218192155526.png" alt="image-20230218192155526"></p>
+<p>CONTAINER 可用 ID（a5d075b5ce28） 也可用 NAMES（ecstatic_chaplygin）</p>
+</blockquote>
+</li>
+<li><p><code>docker [container] stop CONTAINER</code>：停止容器</p>
+</li>
+<li><p><code>docker [container] restart CONTAINER</code>：重启容器</p>
+</li>
+<li><p><code>docker [contaienr] run -itd ubuntu:20.04</code>：创建并启动一个容器 (<code>-itd</code>)</p>
+<ul>
+<li><code>docker [contaienr] run -it ubuntu:20.04</code>：创建并启动一个容器 同时进入该容器 （<code>-it</code>）</li>
+</ul>
+</li>
+<li><p><code>docker [container] attach CONTAINER</code>：进入容器（只能进入正在启动的容器）</p>
+<ul>
+<li>先按<code>Ctrl-p</code>，再按<code>Ctrl-q</code>可以<strong>挂起</strong>容器</li>
+<li><code>Ctrl-d</code>是直接<strong>关闭</strong>该容器</li>
+</ul>
+</li>
+<li><p><code>docker [container] exec CONTAINER COMMAND</code>：在容器中执行命令（正在启动的容器中）</p>
+</li>
+<li><p><code>docker [container] rm CONTAINER</code>：删除容器 （需先停止）</p>
+<blockquote>
+<p>rmi 是删除镜像</p>
+</blockquote>
+</li>
+<li><p><code>docker container prune</code>：删除所有已停止的容器</p>
+<blockquote>
+<p>这里的<code>container </code>不能没有，前面的命令可以没有<code>container </code></p>
+</blockquote>
+</li>
+<li><p><code>docker export -o xxx.tar CONTAINER</code>：将容器<code>CONTAINER</code>导出到本地文件<code>xxx.tar</code>中</p>
+</li>
+<li><p><code>docker import xxx.tar image_name:tag</code>：将本地容器文件<code>xxx.tar</code>导入成镜像，并将镜像命名为<code>image_name:tag</code></p>
+</li>
+<li><p><code>docker export/import与docker save/load</code>的区别：</p>
+<ul>
+<li><code>export/import</code>会丢弃历史记录和元数据信息，仅保存容器当时的快照状态 其本质迁移的也是一个镜像</li>
+<li><code>save/load</code>会保存完整记录，体积更大</li>
+</ul>
+</li>
+<li><p><code>docker top CONTAINER</code>：查看某个容器内的所有进程（需将启动的容器挂起）</p>
+</li>
+<li><p><code>docker stats</code>：查看所有容器的统计信息，包括 CPU、内存、存储、网络等信息</p>
+</li>
+<li><p><code>docker cp xxx CONTAINER:xxx 或 docker cp CONTAINER:xxx xxx</code>：在服务器本地和容器间复制文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker cp tmp.rar peaceful_kepler:/root  <span class="comment"># 将服务器本地的tmp.rar复制到peaceful_kepler容器的root目录下</span></span><br><span class="line">docker cp peaceful_kepler:/root . <span class="comment"># 将peaceful_kepler容器的root文件夹复制到服务器本地</span></span><br></pre></td></tr></table></figure></li>
+<li><p><code>docker rename CONTAINER1 CONTAINER2</code>：重命名容器</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rename peaceful_kepler testName  <span class="comment"># peaceful_kepler是docker生成容器时随便取的名字</span></span><br></pre></td></tr></table></figure></li>
+<li><p><code>docker update CONTAINER --memory 500MB</code>：修改容器限制</p>
+</li>
+</ol>
+<h4 id="2-4-加载镜像并实现-ssh-登录云服务器里的服务器（容器）"><a href="#2-4-加载镜像并实现-ssh-登录云服务器里的服务器（容器）" class="headerlink" title="2.4 加载镜像并实现 ssh 登录云服务器里的服务器（容器）"></a>2.4 加载镜像并实现 ssh 登录云服务器里的服务器（容器）</h4><blockquote>
+<p><strong>记住想使用 ssh 登录该容器 需要一直保持该容器在运行中</strong></p>
+</blockquote>
+<p>进入 AC Terminal，然后：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">scp /var/lib/acwing/docker/images/docker_lesson_1_0.tar server_name:  <span class="comment"># 将镜像上传到自己租的云端服务器</span></span><br><span class="line">ssh server_name  <span class="comment"># 登录自己的云端服务器</span></span><br><span class="line"></span><br><span class="line">docker load -i docker_lesson_1_0.tar  <span class="comment"># 将镜像加载到本地</span></span><br><span class="line">docker run -p 20000:22 --name my_docker_server -itd docker_lesson:1.0  <span class="comment"># 创建并运行docker_lesson:1.0镜像</span></span><br><span class="line"></span><br><span class="line">docker attach my_docker_server  <span class="comment"># 进入创建的docker容器，这里my_docker_server相当于docker_lesson:1.0的别名</span></span><br><span class="line">passwd  <span class="comment"># 设置root密码</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 然后Ctrl-p，再按Ctrl-q挂起容器 不能关闭 不然就不能ssh登录了</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 在任意地方便可使用ssh登录云服务器里的服务器（容器）了</span></span><br><span class="line">ssh root@ip地址 -p 20000</span><br><span class="line"></span><br><span class="line"><span class="comment"># 再该服务器（容器）内，为防止root用户误操作 也可新建一个新用户 并分配sudo权限  这样每次安装软件的命令前也就都需要加sudo了</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 同样可以在该容器内配置vim tmux相关设置</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>对于 <code>docker run -p 20000:22 --name my_docker_server -itd docker_lesson:1.0</code></p>
+<p><code>- p</code> 是指修改端口号映射 将容器内的 22 端口映射到本地的 20000 端口 因为本地的 22 端口被用过了（默认端口 ）</p>
+<p><code>- name</code> 是定义别名，和 ssh 配置别名一样</p>
+<p><code>-itd</code> 是创建并启动一个容器 (<code>-itd</code>)</p>
+<p><strong>也可以给一个容器开放多个端口，如下：</strong></p>
+<p><code>docker run -p 10000:22 -p 443:443 -p 80:80 -p 3030:3030 -p 3040:3040 -p 3050:3050 --name my_docker_server -itd docker_lesson:1.0</code></p>
+</blockquote>
+<p>去云平台控制台中修改安全组配置，放行端口 20000。<br>返回<code>AC Terminal</code>，即可通过<code>ssh</code>登录自己的<code>docker</code>容器：<br><code>ssh root@xxx.xxx.xxx.xxx -p 20000 </code> 将<code>xxx.xxx.xxx.xxx</code>替换成自己租的服务器的 IP 地址<br>然后，可以仿照上节课内容，创建工作账户<code>chjm</code>。<br>最后，可以参考 ssh 登录配置<code>docker</code>容器的别名和免密登录。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Scenery</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://vernalscenery.github.io/2023/01/15/Linux%E5%AD%A6%E4%B9%A0/">https://vernalscenery.github.io/2023/01/15/Linux%E5%AD%A6%E4%B9%A0/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://VernalScenery.github.io" target="_blank">春和景明的记事本</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="/./img/1.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/03/16/SprintBoot%E5%AD%A6%E4%B9%A0/"><img class="prev-cover" src="/./img/1.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">SprintBoot学习</div></div></a></div><div class="next-post pull-right"><a href="/2022/02/01/vue3%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA/"><img class="next-cover" src="/./img/1.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">vue3项目搭建</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/./img/1.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Scenery</div><div class="author-info__description">今天不想跑，所以才去跑</div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">5</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/chjm0121" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="/1595718686@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Linux-%E5%9F%BA%E7%A1%80%E8%AF%BE"><span class="toc-text">Linux 基础课</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="toc-text">文件系统</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84"><span class="toc-text">1.文件结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%B7%AF%E5%BE%84%E9%97%AE%E9%A2%98"><span class="toc-text">2.路径问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%B8%B8%E7%94%A8%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86%E5%91%BD%E4%BB%A4"><span class="toc-text">3.常用文件管理命令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Tmux"><span class="toc-text">Tmux</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%8A%9F%E8%83%BD"><span class="toc-text">1.功能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E7%BB%93%E6%9E%84"><span class="toc-text">2.结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%93%8D%E4%BD%9C"><span class="toc-text">3.操作</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Vim"><span class="toc-text">Vim</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%8A%9F%E8%83%BD-1"><span class="toc-text">1.功能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%A8%A1%E5%BC%8F"><span class="toc-text">2.模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%93%8D%E4%BD%9C-1"><span class="toc-text">3.操作</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-%E8%BF%9E%E6%8B%9B"><span class="toc-text">3.1 连招</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86"><span class="toc-text">4 .异常处理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#shell-%E8%AF%AD%E6%B3%95"><span class="toc-text">shell 语法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%A6%82%E8%AE%BA"><span class="toc-text">1.概论</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1-%E8%84%9A%E6%9C%AC%E7%A4%BA%E4%BE%8B"><span class="toc-text">1.1 脚本示例</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-%E8%BF%90%E8%A1%8C%E6%96%B9%E5%BC%8F"><span class="toc-text">1.2 运行方式</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%B3%A8%E9%87%8A"><span class="toc-text">2. 注释</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-%E5%8D%95%E8%A1%8C%E6%B3%A8%E9%87%8A"><span class="toc-text">2.1 单行注释</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-%E5%A4%9A%E8%A1%8C%E6%B3%A8%E9%87%8A"><span class="toc-text">2.1 多行注释</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%8F%98%E9%87%8F"><span class="toc-text">3. 变量</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-%E5%AE%9A%E4%B9%89%E5%8F%98%E9%87%8F"><span class="toc-text">3.1 定义变量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-%E4%BD%BF%E7%94%A8%E5%8F%98%E9%87%8F"><span class="toc-text">3.2 使用变量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3-%E5%8F%AA%E8%AF%BB%E5%8F%98%E9%87%8F"><span class="toc-text">3.3 只读变量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-4-%E5%88%A0%E9%99%A4%E5%8F%98%E9%87%8F"><span class="toc-text">3.4 删除变量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-5-%E5%8F%98%E9%87%8F%E7%B1%BB%E5%9E%8B"><span class="toc-text">3.5 变量类型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-6-%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="toc-text">3.6 字符串</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-7-%E9%BB%98%E8%AE%A4%E5%8F%98%E9%87%8F"><span class="toc-text">3.7 默认变量</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%95%B0%E7%BB%84"><span class="toc-text">4. 数组</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4-1-%E5%AE%9A%E4%B9%89"><span class="toc-text">4.1 定义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-2-%E8%AF%BB%E5%8F%96%E6%95%B0%E7%BB%84%E4%B8%AD%E6%9F%90%E4%B8%AA%E5%85%83%E7%B4%A0%E7%9A%84%E5%80%BC"><span class="toc-text">4.2 读取数组中某个元素的值</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-3-%E8%AF%BB%E5%8F%96%E6%95%B4%E4%B8%AA%E6%95%B0%E7%BB%84"><span class="toc-text">4.3 读取整个数组</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-4-%E6%95%B0%E7%BB%84%E9%95%BF%E5%BA%A6"><span class="toc-text">4.4 数组长度</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-expr-%E5%91%BD%E4%BB%A4"><span class="toc-text">5. expr 命令</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#5-1-%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="toc-text">5.1 字符串表达式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-2-%E6%95%B4%E6%95%B0%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="toc-text">5.2 整数表达式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-3-%E9%80%BB%E8%BE%91%E5%85%B3%E7%B3%BB%E8%A1%A8%E8%BE%BE%E5%BC%8F-%EF%BC%88%E6%94%AF%E6%8C%81%E7%9F%AD%E8%B7%AF%E8%BF%90%E7%AE%97%EF%BC%89"><span class="toc-text">5.3 逻辑关系表达式 （支持短路运算）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-read-%E5%91%BD%E4%BB%A4"><span class="toc-text">6. read 命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-echo-%E5%91%BD%E4%BB%A4"><span class="toc-text">7. echo 命令</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#7-1-%E6%98%BE%E7%A4%BA%E6%99%AE%E9%80%9A%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="toc-text">7.1 显示普通字符串</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-2-%E6%98%BE%E7%A4%BA%E8%BD%AC%E4%B9%89%E5%AD%97%E7%AC%A6"><span class="toc-text">7.2 显示转义字符</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-3-%E6%98%BE%E7%A4%BA%E5%8F%98%E9%87%8F"><span class="toc-text">7.3 显示变量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-4-%E6%98%BE%E7%A4%BA%E6%8D%A2%E8%A1%8C"><span class="toc-text">7.4 显示换行</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-5-%E6%98%BE%E7%A4%BA%E4%B8%8D%E6%8D%A2%E8%A1%8C"><span class="toc-text">7.5 显示不换行</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-5-%E6%98%BE%E7%A4%BA%E7%BB%93%E6%9E%9C%E5%AE%9A%E5%90%91%E8%87%B3%E6%96%87%E4%BB%B6"><span class="toc-text">7.5 显示结果定向至文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-6-%E5%8E%9F%E6%A0%B7%E8%BE%93%E5%87%BA%E5%AD%97%E7%AC%A6%E4%B8%B2%EF%BC%8C%E4%B8%8D%E8%BF%9B%E8%A1%8C%E8%BD%AC%E4%B9%89%E6%88%96%E5%8F%96%E5%8F%98%E9%87%8F-%E7%94%A8%E5%8D%95%E5%BC%95%E5%8F%B7"><span class="toc-text">7.6 原样输出字符串，不进行转义或取变量(用单引号)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-7-%E6%98%BE%E7%A4%BA%E5%91%BD%E4%BB%A4%E7%9A%84%E6%89%A7%E8%A1%8C%E7%BB%93%E6%9E%9C"><span class="toc-text">7.7 显示命令的执行结果</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-printf-%E5%91%BD%E4%BB%A4"><span class="toc-text">8. printf 命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-test-%E5%91%BD%E4%BB%A4%E4%B8%8E%E5%88%A4%E6%96%AD%E7%AC%A6%E5%8F%B7"><span class="toc-text">9. test 命令与判断符号[ ]</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#9-1-%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97%E7%AC%A6-amp-amp-%E5%92%8C"><span class="toc-text">9.1 逻辑运算符&amp;&amp;和||</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#9-2-test-%E5%91%BD%E4%BB%A4"><span class="toc-text">9.2 test 命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#9-3-%E5%88%A4%E6%96%AD%E7%AC%A6%E5%8F%B7"><span class="toc-text">9.3 判断符号[ ]</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-%E5%88%A4%E6%96%AD%E8%AF%AD%E5%8F%A5"><span class="toc-text">10. 判断语句</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#10-1-%E5%8D%95%E5%B1%82-if"><span class="toc-text">10.1 单层 if</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#10-2-%E5%8D%95%E5%B1%82-if-else"><span class="toc-text">10.2 单层 if-else</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#10-3-%E5%A4%9A%E5%B1%82-if-elif-elif-else"><span class="toc-text">10.3 多层 if-elif-elif-else</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#10-4-case%E2%80%A6esac-%E5%BD%A2%E5%BC%8F"><span class="toc-text">10.4 case…esac 形式</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#11-%E5%BE%AA%E7%8E%AF%E8%AF%AD%E5%8F%A5"><span class="toc-text">11. 循环语句</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#11-1-for%E2%80%A6in%E2%80%A6do%E2%80%A6done"><span class="toc-text">11.1 for…in…do…done</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#11-2-for-%E2%80%A6-%E2%80%A6-%E2%80%A6-do%E2%80%A6done"><span class="toc-text">11.2 for ((…;…;…)) do…done</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#11-3-while%E2%80%A6do%E2%80%A6done-%E5%BE%AA%E7%8E%AF"><span class="toc-text">11.3 while…do…done 循环</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#11-4-until%E2%80%A6do%E2%80%A6done-%E5%BE%AA%E7%8E%AF"><span class="toc-text">11.4 until…do…done 循环</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#11-5-break-%E5%91%BD%E4%BB%A4"><span class="toc-text">11.5 break 命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#11-6-continue-%E5%91%BD%E4%BB%A4"><span class="toc-text">11.6 continue 命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#11-7-%E6%AD%BB%E5%BE%AA%E7%8E%AF%E7%9A%84%E5%A4%84%E7%90%86%E6%96%B9%E5%BC%8F"><span class="toc-text">11.7 死循环的处理方式</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#12-%E5%87%BD%E6%95%B0"><span class="toc-text">12. 函数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#12-1-%E4%B8%8D%E8%8E%B7%E5%8F%96-return-%E5%80%BC%E5%92%8C-stdout-%E5%80%BC"><span class="toc-text">12.1 不获取 return 值和 stdout 值</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#12-2-%E8%8E%B7%E5%8F%96-return-%E5%80%BC%E5%92%8C-stdout-%E5%80%BC"><span class="toc-text">12.2 获取 return 值和 stdout 值</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#12-3-%E5%87%BD%E6%95%B0%E7%9A%84%E8%BE%93%E5%85%A5%E5%8F%82%E6%95%B0"><span class="toc-text">12.3 函数的输入参数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#12-4-%E5%87%BD%E6%95%B0%E5%86%85%E7%9A%84%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F"><span class="toc-text">12. 4 函数内的局部变量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#13-exit-%E5%91%BD%E4%BB%A4"><span class="toc-text">13. exit 命令</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#13-%E6%96%87%E4%BB%B6%E9%87%8D%E5%AE%9A%E5%90%91"><span class="toc-text">13. 文件重定向</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#14-%E5%BC%95%E5%85%A5%E5%A4%96%E9%83%A8%E6%96%87%E4%BB%B6"><span class="toc-text">14. 引入外部文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#exit-%E4%B8%8E-return-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-text">exit 与 return 的区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%8F%E6%8A%80%E5%B7%A7%EF%BC%9A%E5%A6%82%E4%BD%95%E5%B0%86%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%AD%E7%9A%84%E6%96%87%E4%BB%B6%E6%95%B4%E4%BD%93%E5%A4%8D%E5%88%B6%E5%87%BA%E6%9D%A5%EF%BC%9F"><span class="toc-text">小技巧：如何将服务器中的文件整体复制出来？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ssh"><span class="toc-text">ssh</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-ssh-%E7%99%BB%E5%BD%95"><span class="toc-text">1. ssh 登录</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1-%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95"><span class="toc-text">1.1 基本用法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-text">1.2 配置文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-3-%E5%AF%86%E9%92%A5%E7%99%BB%E5%BD%95"><span class="toc-text">1.3 密钥登录</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-4-%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4"><span class="toc-text">1.4 执行命令</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-scp-%E4%BC%A0%E6%96%87%E4%BB%B6"><span class="toc-text">2. scp 传文件</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95"><span class="toc-text">1. 基本用法</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E4%BD%BF%E7%94%A8-scp-%E9%85%8D%E7%BD%AE%E5%85%B6%E4%BB%96%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84-vim-%E5%92%8C-tmux"><span class="toc-text">2. 使用 scp 配置其他服务器的 vim 和 tmux</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git"><span class="toc-text">git</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-text">1. 基本概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%85%A8%E5%B1%80%E8%AE%BE%E7%BD%AE"><span class="toc-text">2. 全局设置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%95%B4%E4%BD%93%E6%B5%81%E7%A8%8B"><span class="toc-text">3. 整体流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%B5%81%E7%A8%8B%E8%AF%A6%E8%A7%A3"><span class="toc-text">4. 流程详解</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4-1-%E5%87%A0%E4%B8%AA%E6%9C%AF%E8%AF%AD"><span class="toc-text">4.1 几个术语</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-2-HEAD-%E7%9A%84%E6%8C%87%E5%90%91%E5%8F%98%E5%8C%96"><span class="toc-text">4.2 HEAD 的指向变化</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-Git-%E6%96%87%E4%BB%B6%E7%9A%84%E5%9B%9B%E7%A7%8D%E7%8A%B6%E6%80%81"><span class="toc-text">5. Git 文件的四种状态</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E6%9F%A5%E7%9C%8B%E5%91%BD%E4%BB%A4"><span class="toc-text">6. 查看命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E5%88%A0%E9%99%A4%E6%96%87%E4%BB%B6"><span class="toc-text">7. 删除文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-%E6%92%A4%E9%94%80%E4%BF%AE%E6%94%B9"><span class="toc-text">8. 撤销修改</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-%E7%89%88%E6%9C%AC%E5%9B%9E%E9%80%80"><span class="toc-text">9. 版本回退</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#9-1-%E6%9F%A5%E7%9C%8B%E7%89%88%E6%9C%AC"><span class="toc-text">9.1 查看版本</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#9-2-%E5%85%B7%E4%BD%93%E5%9C%BA%E6%99%AF"><span class="toc-text">9.2 具体场景</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#9-3-%E5%85%B7%E4%BD%93%E5%91%BD%E4%BB%A4"><span class="toc-text">9.3 具体命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#9-4-checkout-%E4%B8%8E-reset-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-text">9.4 checkout 与 reset 的区别</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#checkout"><span class="toc-text">checkout</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#reset"><span class="toc-text">reset</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BA%8C%E8%80%85%E5%8C%BA%E5%88%AB"><span class="toc-text">二者区别</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-%E5%88%86%E6%94%AF%E7%9B%B8%E5%85%B3"><span class="toc-text">10. 分支相关</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#10-1-%E6%9F%A5%E7%9C%8B%E5%88%86%E6%94%AF"><span class="toc-text">10.1 查看分支</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#10-2-%E5%88%9B%E5%BB%BA%E5%88%86%E6%94%AF"><span class="toc-text">10.2 创建分支</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#10-3-%E5%88%A0%E9%99%A4%E5%88%86%E6%94%AF"><span class="toc-text">10. 3 删除分支</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#10-4-%E5%88%87%E6%8D%A2%E5%88%86%E6%94%AF"><span class="toc-text">10.4 切换分支</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#10-5-%E5%90%88%E5%B9%B6%E5%88%86%E6%94%AF"><span class="toc-text">10.5 合并分支</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#11-%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93"><span class="toc-text">11. 远程仓库</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#11-1-%E6%9C%AC%E5%9C%B0%E4%B8%8E%E4%BA%91%E7%AB%AF%E5%85%B3%E8%81%94"><span class="toc-text">11.1 本地与云端关联</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#11-2-%E6%9C%AC%E5%9C%B0%E6%8E%A8%E9%80%81%E5%88%B0%E4%BA%91%E7%AB%AF"><span class="toc-text">11.2 本地推送到云端</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#11-3-%E4%BA%91%E7%AB%AF%E6%8B%89%E5%8F%96%E5%88%B0%E6%9C%AC%E5%9C%B0"><span class="toc-text">11.3 云端拉取到本地</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#12-stash-%E7%BC%93%E5%AD%98"><span class="toc-text">12. stash 缓存</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#12-1-%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-text">12.1 应用场景</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#12-2-%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4"><span class="toc-text">12.2 相关命令</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#13-%E5%8D%8F%E4%BD%9C%E5%BC%80%E5%8F%91"><span class="toc-text">13. 协作开发</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#thrift"><span class="toc-text">thrift</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%A1%E9%81%93%E3%80%81%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E4%B8%8E%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-text">管道、环境变量与常用命令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E7%AE%A1%E9%81%93"><span class="toc-text">1. 管道</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1-%E6%A6%82%E5%BF%B5"><span class="toc-text">1.1 概念</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-%E8%A6%81%E7%82%B9"><span class="toc-text">1.2 要点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-3-%E4%B8%8E%E6%96%87%E4%BB%B6%E9%87%8D%E5%AE%9A%E5%90%91%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-text">1.3 与文件重定向的区别</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="toc-text">2.环境变量</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-%E6%A6%82%E5%BF%B5"><span class="toc-text">2.1 概念</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-%E6%9F%A5%E7%9C%8B"><span class="toc-text">2.2 查看</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-%E4%BF%AE%E6%94%B9"><span class="toc-text">2.3 修改</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-4-%E5%B8%B8%E8%A7%81%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="toc-text">2.4 常见环境变量</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%B8%B8%E8%A7%81%E5%91%BD%E4%BB%A4"><span class="toc-text">3. 常见命令</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-%E7%B3%BB%E7%BB%9F%E7%8A%B6%E5%86%B5"><span class="toc-text">3.1 系统状况</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90"><span class="toc-text">3.2 文件权限</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3-%E6%96%87%E4%BB%B6%E6%A3%80%E7%B4%A2"><span class="toc-text">3.3 文件检索</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-4-%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9"><span class="toc-text">3.4 查看文件内容</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-5-%E7%94%A8%E6%88%B7%E7%9B%B8%E5%85%B3"><span class="toc-text">3.5 用户相关</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-6-%E5%B7%A5%E5%85%B7"><span class="toc-text">3.6 工具</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-7-%E5%AE%89%E8%A3%85%E8%BD%AF%E4%BB%B6"><span class="toc-text">3.7 安装软件</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%85%8D%E7%BD%AE%E4%B8%8E-Docker"><span class="toc-text">云服务器配置与 Docker</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%88%9D%E5%A7%8B%E9%85%8D%E7%BD%AE"><span class="toc-text">1. 初始配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Docker"><span class="toc-text">2. Docker</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-%E5%B0%86%E5%BD%93%E5%89%8D%E7%94%A8%E6%88%B7%E6%B7%BB%E5%8A%A0%E5%88%B0-docker-%E7%94%A8%E6%88%B7%E7%BB%84"><span class="toc-text">2.1 将当前用户添加到 docker 用户组</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-%E9%95%9C%E5%83%8F%EF%BC%88images%EF%BC%89"><span class="toc-text">2.2 镜像（images）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-%E5%AE%B9%E5%99%A8-container"><span class="toc-text">2.3 容器(container)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-4-%E5%8A%A0%E8%BD%BD%E9%95%9C%E5%83%8F%E5%B9%B6%E5%AE%9E%E7%8E%B0-ssh-%E7%99%BB%E5%BD%95%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%87%8C%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%99%A8%EF%BC%88%E5%AE%B9%E5%99%A8%EF%BC%89"><span class="toc-text">2.4 加载镜像并实现 ssh 登录云服务器里的服务器（容器）</span></a></li></ol></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/07/20/Java%E8%AF%AD%E6%B3%95/" title="Java语法">Java语法</a><time datetime="2024-07-20T01:46:49.000Z" title="发表于 2024-07-20 09:46:49">2024-07-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/03/17/hexo%E9%83%A8%E7%BD%B2%E4%BA%91%E7%AB%AF/" title="hexo部署云端">hexo部署云端</a><time datetime="2023-03-17T01:02:47.000Z" title="发表于 2023-03-17 09:02:47">2023-03-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/03/16/SprintBoot%E5%AD%A6%E4%B9%A0/" title="SprintBoot学习">SprintBoot学习</a><time datetime="2023-03-16T09:24:19.000Z" title="发表于 2023-03-16 17:24:19">2023-03-16</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/01/15/Linux%E5%AD%A6%E4%B9%A0/" title="Linux学习">Linux学习</a><time datetime="2023-01-15T08:19:19.000Z" title="发表于 2023-01-15 16:19:19">2023-01-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/02/01/vue3%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA/" title="vue3项目搭建">vue3项目搭建</a><time datetime="2022-02-01T04:14:08.000Z" title="发表于 2022-02-01 12:14:08">2022-02-01</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/./img/1.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By Scenery</div><div class="footer_custom_text"><div>波澜不惊</div><div class="footer-div"><img class="footer-icon" src="./img/备案图标.png"><a class="footer-a" target="_blank" rel="noopener" href="http://beian.miit.gov.cn/">皖ICP备2021016944号-1</a></div></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">本地搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
