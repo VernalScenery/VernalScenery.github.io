@@ -194,6 +194,25 @@
     
     
     <entry>
+      <title>ob使用笔记</title>
+      <link href="/2024/07/13/ob%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/"/>
+      <url>/2024/07/13/ob%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/</url>
+      
+        <content type="html"><![CDATA[<h2 id="1-链接"><a href="#1-链接" class="headerlink" title="1. 链接"></a>1. 链接</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1.[[title]]</span><br><span class="line">2.[[title#段名]]</span><br><span class="line">3.[[title#^块名]]</span><br><span class="line">4.[[title#^块名|别名]]</span><br><span class="line">5.![[title#^块名|别名]]     展现在当前页面</span><br></pre></td></tr></table></figure><h2 id="2-搜索"><a href="#2-搜索" class="headerlink" title="2. 搜索"></a>2. 搜索</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">搜索当前文档：Ctrl + F</span><br><span class="line">搜索整个资料库：Ctrl/Cmd + Shfift + F</span><br><span class="line"></span><br><span class="line">搜索技巧</span><br><span class="line">搜索包含多个关键词的文档（空格间隔，与）</span><br><span class="line">搜索包含某一个关键词的文档（OR，或）</span><br><span class="line"></span><br><span class="line">指定搜索范围</span><br><span class="line">文件名中包含word——file:word</span><br><span class="line">文本内容包含word——content:word</span><br><span class="line">标签文章内包含word——tag:#tag:word</span><br><span class="line"></span><br><span class="line">同一行中的多个关键词——line：word1 word2</span><br><span class="line">同一章节中的多个关键词——section：word1 word2</span><br><span class="line">同一段落（块）中的多个关键词——block：word1 word2</span><br><span class="line"></span><br><span class="line">搜索任务</span><br><span class="line">搜索所有任务——task:&quot;&quot;</span><br><span class="line">搜索未完成任务——task-todo:&quot;&quot;</span><br><span class="line">搜索已完成任务——task-done:&quot;&quot;</span><br><span class="line"></span><br><span class="line">引用搜索内容</span><br><span class="line">```query</span><br><span class="line">file:word</span><br></pre></td></tr></table></figure><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">## 3. 已设置的快捷键</span><br><span class="line"></span><br></pre></td></tr></table></figure><p> ctrl + shift + C  折叠右边<br> ctrl + shift + V  折叠左边<br> ctrl + shift + [  拆分左右<br> ctrl + shift + ]  拆分上下<br> alt + E 展开/折叠当前行<br> alt + F 展开所有</p><p> alt + 3 插入内链<br> alt + C 插入代码块<br> alt + B 插入引用<br> ctrl + t  插入模板</p><p> ctrl + N  新建文件</p><p> ctrl + shift + G  关系图谱：打开局部关系图<br> ctrl + G  关系图谱：打开全部关系图<br> ctrl + W  关闭当前标签页<br> ctrl + Q  源码/视图切换</p><p> ctrl + shift + Z  suffing获取浏览器当前时间戳</p><pre><code></code></pre>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> 元技能 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>nvm下载与使用</title>
       <link href="/2024/07/13/nvm%E4%B8%8B%E8%BD%BD%E4%B8%8E%E4%BD%BF%E7%94%A8/"/>
       <url>/2024/07/13/nvm%E4%B8%8B%E8%BD%BD%E4%B8%8E%E4%BD%BF%E7%94%A8/</url>
@@ -213,11 +232,11 @@
     
     
     <entry>
-      <title>ob使用笔记</title>
-      <link href="/2024/07/13/ob%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/"/>
-      <url>/2024/07/13/ob%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/</url>
+      <title>滴答清单使用技巧</title>
+      <link href="/2024/07/13/%E6%BB%B4%E7%AD%94%E6%B8%85%E5%8D%95%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/"/>
+      <url>/2024/07/13/%E6%BB%B4%E7%AD%94%E6%B8%85%E5%8D%95%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/</url>
       
-        <content type="html"><![CDATA[<h2 id="1-链接"><a href="#1-链接" class="headerlink" title="1. 链接"></a>1. 链接</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1.[[title]]</span><br><span class="line">2.[[title#段名]]</span><br><span class="line">3.[[title#^块名]]</span><br><span class="line">4.[[title#^块名|别名]]</span><br><span class="line">5.![[title#^块名|别名]]     展现在当前页面</span><br></pre></td></tr></table></figure><h2 id="2-搜索"><a href="#2-搜索" class="headerlink" title="2. 搜索"></a>2. 搜索</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">搜索当前文档：Ctrl + F</span><br><span class="line">搜索整个资料库：Ctrl/Cmd + Shfift + F</span><br><span class="line"></span><br><span class="line">搜索技巧</span><br><span class="line">搜索包含多个关键词的文档（空格间隔，与）</span><br><span class="line">搜索包含某一个关键词的文档（OR，或）</span><br><span class="line"></span><br><span class="line">指定搜索范围</span><br><span class="line">文件名中包含word——file:word</span><br><span class="line">文本内容包含word——content:word</span><br><span class="line">标签文章内包含word——tag:#tag:word</span><br><span class="line"></span><br><span class="line">同一行中的多个关键词——line：word1 word2</span><br><span class="line">同一章节中的多个关键词——section：word1 word2</span><br><span class="line">同一段落（块）中的多个关键词——block：word1 word2</span><br><span class="line"></span><br><span class="line">搜索任务</span><br><span class="line">搜索所有任务——task:&quot;&quot;</span><br><span class="line">搜索未完成任务——task-todo:&quot;&quot;</span><br><span class="line">搜索已完成任务——task-done:&quot;&quot;</span><br><span class="line"></span><br><span class="line">引用搜索内容</span><br><span class="line">```query</span><br><span class="line">file:word</span><br></pre></td></tr></table></figure><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">## 3. 已设置的快捷键</span><br><span class="line"></span><br></pre></td></tr></table></figure><p> ctrl + shift + C  折叠右边<br> ctrl + shift + V  折叠左边<br> ctrl + shift + [  拆分左右<br> ctrl + shift + ]  拆分上下<br> alt + E 展开/折叠当前行<br> alt + F 展开所有</p><p> alt + 3 插入内链<br> alt + C 插入代码块<br> alt + B 插入引用<br> ctrl + t  插入模板</p><p> ctrl + N  新建文件</p><p> ctrl + shift + G  关系图谱：打开局部关系图<br> ctrl + G  关系图谱：打开全部关系图<br> ctrl + W  关闭当前标签页<br> ctrl + Q  源码/视图切换</p><p> ctrl + shift + Z  suffing获取浏览器当前时间戳</p><pre><code></code></pre>]]></content>
+        <content type="html"><![CDATA[<h2 id="标签"><a href="#标签" class="headerlink" title="标签"></a>标签</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">1. 状态标签</span><br><span class="line">!focus </span><br><span class="line">!review </span><br><span class="line">!todo</span><br><span class="line">2. 番茄数标签</span><br><span class="line">xpomo</span><br><span class="line">3. 清单类别</span><br><span class="line">checklist </span><br><span class="line">memolist </span><br><span class="line">flowlis</span><br></pre></td></tr></table></figure><h2 id="快速添加-alt-shift-D"><a href="#快速添加-alt-shift-D" class="headerlink" title="快速添加(alt+shift+D)"></a>快速添加(alt+shift+D)</h2><pre><code>1. 全局快捷键 符号（英文状态）     !：优先级     #：标签     ~ ^：清单 编号的意义     @：人员     *：到期日 2. 智能识别     单次        日         周x         月x     循环         每天         每周        每月         农历</code></pre>]]></content>
       
       
       
@@ -256,25 +275,6 @@
       <url>/2024/07/13/%E5%85%83%E6%8A%80%E8%83%BD%20-%20%E5%AE%8C%E6%95%B4%E7%B3%BB%E7%BB%9F/</url>
       
         <content type="html"><![CDATA[<h2 id="信息库-joplin"><a href="#信息库-joplin" class="headerlink" title="信息库 - joplin"></a>信息库 - joplin</h2><h3 id="整体结构"><a href="#整体结构" class="headerlink" title="整体结构"></a>整体结构</h3><ul><li>00_Inbox 收件箱</li><li>00_Tmp 不需要的暂存信息</li><li>01_学习</li><li>02_项目<h3 id="笔记规则"><a href="#笔记规则" class="headerlink" title="笔记规则"></a>笔记规则</h3><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/202401131917912.png" alt="image.png"></li></ul><h2 id="管理系统-Notion"><a href="#管理系统-Notion" class="headerlink" title="管理系统 - Notion"></a>管理系统 - Notion</h2><h3 id="整体结构-1"><a href="#整体结构-1" class="headerlink" title="整体结构"></a>整体结构</h3><ul><li>00_Inbox 临时记录/收件箱</li><li>00_ING 正在处理的项目<ul><li>PJ_考研</li><li>PJ_学习_java</li></ul></li><li>00_TMP 不需要的暂存信息</li><li>01_学习记录<ul><li>01_阅读记录（数据库呈现）</li><li>02_课程记录（数据库呈现）</li><li>03_文献记录（数据库呈现）</li></ul></li><li>02_项目记录<ul><li>PJ_考研</li><li>PJ_学习_java</li></ul></li><li>03_折腾记录</li></ul><h3 id="笔记规则-1"><a href="#笔记规则-1" class="headerlink" title="笔记规则"></a>笔记规则</h3><ol><li>一、二级页面需设置封面以及图标</li><li>收集类内容在前，思考类内容其次，详细信息最后</li><li>通常情况下，所有内容最多使用至三级标题</li><li>文档中，标题须根据级别使用背景色，如下：<ul><li>一级标题 Red</li><li>二级标题 Blue</li><li>三级标题 Green</li></ul></li></ol><h3 id="整体思路"><a href="#整体思路" class="headerlink" title="整体思路"></a>整体思路</h3><h4 id="底层方法"><a href="#底层方法" class="headerlink" title="底层方法"></a>底层方法</h4><p>OKR 工作法<br><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/202401141230571.png" alt="image.png|475"><br>GTD<br>第一步：工具 notion<br>第二步：将所有事情不做评判的全部记录到工具上<br><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/202401141236972.png" alt="image.png|450"><br>第三步：在每天固定时间或需要时处理—分类/分解—参考资料清单/将来也许清单/项目清单/执行清单<br>例如：</p><ul><li>参考资料清单（一篇看到的不错的文章）；</li><li>将来也许清单（想去 xx 玩）；</li><li>项目清单（制作 notion 视频）；</li><li>执行清单（分解制作 notion 视频任务）<br><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/202401141239108.png" alt="image.png|450"></li></ul><p>执行清单：</p><ul><li>经过分解的，能一步完成的事情；</li><li>用番茄工作法预估工作时间（番茄钟里只做一件事）<br><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/202401141241828.png" alt="image.png|375"><br>第四步：每周整理复盘<h3 id="整体框架"><a href="#整体框架" class="headerlink" title="整体框架"></a>整体框架</h3><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/202401141251774.png" alt="image.png"><br><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/202401141253499.png" alt="image.png"></li></ul>]]></content>
-      
-      
-      
-        <tags>
-            
-            <tag> 元技能 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>滴答清单使用技巧</title>
-      <link href="/2024/07/13/%E6%BB%B4%E7%AD%94%E6%B8%85%E5%8D%95%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/"/>
-      <url>/2024/07/13/%E6%BB%B4%E7%AD%94%E6%B8%85%E5%8D%95%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/</url>
-      
-        <content type="html"><![CDATA[<h2 id="标签"><a href="#标签" class="headerlink" title="标签"></a>标签</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">1. 状态标签</span><br><span class="line">!focus </span><br><span class="line">!review </span><br><span class="line">!todo</span><br><span class="line">2. 番茄数标签</span><br><span class="line">xpomo</span><br><span class="line">3. 清单类别</span><br><span class="line">checklist </span><br><span class="line">memolist </span><br><span class="line">flowlis</span><br></pre></td></tr></table></figure><h2 id="快速添加-alt-shift-D"><a href="#快速添加-alt-shift-D" class="headerlink" title="快速添加(alt+shift+D)"></a>快速添加(alt+shift+D)</h2><pre><code>1. 全局快捷键 符号（英文状态）     !：优先级     #：标签     ~ ^：清单 编号的意义     @：人员     *：到期日 2. 智能识别     单次        日         周x         月x     循环         每天         每周        每月         农历</code></pre>]]></content>
       
       
       
