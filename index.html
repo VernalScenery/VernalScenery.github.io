@@ -49,7 +49,7 @@
   isHome: true,
   isHighlightShrink: false,
   isToc: false,
-  postUpdate: '2024-07-26 21:54:14'
+  postUpdate: '2024-07-26 22:03:20'
 }</script><noscript><style type="text/css">
   #nav {
     opacity: 1
@@ -185,16 +185,20 @@ boolean (defaults to true)
 A control is a visible widget with a DOM element in a fixed position on the screen. They can involve user input (buttons), or be informational only; the position is determined using CSS. By default these are placed in the container with CSS class name ol-overlaycontainer-stopevent, but can use any outside DOM element.
 This is the base class for controls. You can use it for simple custom controls by creating the element with listeners, creating an instance:
 
-1const myControl = new  ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/07/26/01%20openLayer_%E5%85%A5%E9%97%A8/" title="01 openLayer_入门">01 openLayer_入门</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-07-26T01:00:12.000Z" title="发表于 2024-07-26 09:00:12">2024-07-26</time></span></div><div class="content">1 Observable - 抽象基类 - 可观察类
+1const myControl = new  ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/07/26/01%20openLayer_%E5%85%A5%E9%97%A8/" title="01 openLayer_入门">01 openLayer_入门</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-07-26T01:00:12.000Z" title="发表于 2024-07-26 09:00:12">2024-07-26</time></span></div><div class="content">1 综述关注三点：
+
+每个类构建时的 option，以及该类的可触发的事件，和可调用的属性
+类与类之间的继承关系，子类可以继承父类的方法
+openLayer 对 JS 标准库中数组、事件等进行了一些封装，从而形成的类
+
+2 Observable - 抽象基类 - 可观察类
 Abstract base class; normally only used for creating subclasses and not instantiated in apps. An event target providing convenient methods for listener registration and unregistration. A generic change event is always available through changed.
 
 可以实现 chang : 属性
-1.1 Subclasses
+2.1 Subclasses
 BaseObject
 
-1.2 Fires(事件)1.2.1 chang(BaseEvent)Triggered when the revision counter is increased
-这个 revision 即由 getRevision 获取的
-12345678910111213141516171819202122232425// 通用更改事件。当修订计数器增加时触发。  map. ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/07/25/%E9%9D%9E%E6%9A%B4%E5%8A%9B%E6%B2%9F%E9%80%9A_update/" title="非暴力沟通_update">非暴力沟通_update</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-07-24T23:10:29.000Z" title="发表于 2024-07-25 07:10:29">2024-07-25</time></span></div><div class="content">非暴力沟通核心
+2.2 Fires(事件)2.2.1 chang(BaseEvent)Triggered when the revision counter is  ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/07/25/%E9%9D%9E%E6%9A%B4%E5%8A%9B%E6%B2%9F%E9%80%9A_update/" title="非暴力沟通_update">非暴力沟通_update</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-07-24T23:10:29.000Z" title="发表于 2024-07-25 07:10:29">2024-07-25</time></span></div><div class="content">非暴力沟通核心
 带着尊重和同理心对待他人，并且发自内心地相互给予
 关注自己和他人的需求
 
