@@ -1,0 +1,551 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>07_机器学习_多层感知机(MLP) | 春和景明的记事本</title><meta name="author" content="Scenery"><meta name="copyright" content="Scenery"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="1 核心思想1.1 为什么需要多层 ？—— 单层感知机的局限性最早的神经网络模型是单层感知机，它只有一个输入层和一个输出层。它本质上是一个线性分类器，意味着它只能在数据空间里画一条直线（或高维度的超平面）来进行分割。 这导致它只能解决线性可分的问题，比如逻辑“与”（AND）和“或”（OR）。但是，对"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://vernalscenery.github.io/2025/07/23/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86/07_%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0_%E5%A4%9A%E5%B1%82%E6%84%9F%E7%9F%A5%E6%9C%BA(MLP)/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '07_机器学习_多层感知机(MLP)',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-08-05 14:17:15'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/style.css"><meta name="generator" content="Hexo 5.4.2"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/./img/1.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">73</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">14</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/./img/1.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="春和景明的记事本"><span class="site-name">春和景明的记事本</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">07_机器学习_多层感知机(MLP)</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-07-22T22:46:33.000Z" title="发表于 2025-07-23 06:46:33">2025-07-23</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-08-05T06:17:15.000Z" title="更新于 2025-08-05 14:17:15">2025-08-05</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">6.6k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>21分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="07_机器学习_多层感知机(MLP)"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="1-核心思想"><a href="#1-核心思想" class="headerlink" title="1 核心思想"></a>1 核心思想</h2><h3 id="1-1-为什么需要多层-？——-单层感知机的局限性"><a href="#1-1-为什么需要多层-？——-单层感知机的局限性" class="headerlink" title="1.1 为什么需要多层 ？—— 单层感知机的局限性"></a>1.1 为什么需要多层 ？—— 单层感知机的局限性</h3><p>最早的神经网络模型是<strong>单层感知机</strong>，它只有一个输入层和一个输出层。它本质上是一个<strong>线性分类器</strong>，意味着它只能在数据空间里画一条<strong>直线</strong>（或高维度的超平面）来进行分割。</p>
+<p>这导致它只能解决<strong>线性可分</strong>的问题，比如逻辑“与”（AND）和“或”（OR）。但是，对于线性不可分的问题，单层感知机就无能为力了。最著名的例子就是<strong>异或问题（XOR）</strong>。</p>
+<p><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/20250723184831.png" alt="image.png|386"></p>
+<p>如上图，你永远无法用一条直线将 <code>(0,1)</code>、<code>(1,0)</code> 与 <code>(0,0)</code>、<code>(1,1)</code> 分开。这个看似简单的问题在早期 AI 发展中造成了巨大瓶颈，也直接催生了多层感知机的诞生。</p>
+<h3 id="1-2-多层感知机的架构"><a href="#1-2-多层感知机的架构" class="headerlink" title="1.2 多层感知机的架构"></a>1.2 多层感知机的架构</h3><p><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/20250723184634.png" alt="image.png|778"></p>
+<p>从结构上看，一个多层感知机由三部分组成：</p>
+<ul>
+<li><strong>输入层 (Input Layer):</strong> 接收外部输入的数据，其节点数量通常与待处理数据的特征维度相等。</li>
+<li><strong>隐藏层 (Hidden Layer):</strong> 位于输入层和输出层之间，是 MLP 的核心所在。可以有一个或多个隐藏层，每个隐藏层由若干个神经元（或称为节点）组成。正是这些隐藏层的存在，赋予了 MLP 学习非线性特征的能力。</li>
+<li><strong>输出层 (Output Layer):</strong> 产生最终的计算结果，输出层的结构取决于具体的任务：<ul>
+<li><strong>回归任务</strong>（如预测房价）：通常只有一个神经元，且不使用（或使用线性）激活函数。</li>
+<li><strong>二分类任务</strong>（如判断是否为垃圾邮件）：通常只有一个神经元，并使用 <code>Sigmoid</code> 激活函数，输出一个 0 到 1 之间的概率值。</li>
+<li><strong>多分类任务</strong>（如识别图片是猫、狗还是鸟）：通常有 N 个神经元（N 为类别数），并使用 <code>Softmax</code> 激活函数，输出所有类别的概率分布。</li>
+</ul>
+</li>
+</ul>
+<h3 id="1-3-MLP-的“秘密武器”：非线性激活函数"><a href="#1-3-MLP-的“秘密武器”：非线性激活函数" class="headerlink" title="1.3 MLP 的“秘密武器”：非线性激活函数"></a>1.3 MLP 的“秘密武器”：非线性激活函数</h3><p>如果仅仅是堆叠网络层，而没有激活函数，那么多层网络和单层网络在数学上是等价的（多个线性变换的组合仍然是线性变换）。</p>
+<p>MLP 之所以能够解决非线性问题，其真正的“秘密武器”是在每个隐藏层的神经元上都应用了一个<strong>非线性激活函数（Non-linear Activation Function）</strong>。</p>
+<ul>
+<li><strong>作用</strong>：为模型引入非线性能力，使其能够学习和拟合复杂的曲线边界。</li>
+<li><strong>常用函数</strong>：<code>Sigmoid</code>、<code>Tanh</code>，以及目前最流行的 <code>ReLU</code> (Rectified Linear Unit) 及其变体。</li>
+</ul>
+<p><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/20250723185511.png" alt="image.png|826"></p>
+<p>神经网络的“魔法”不在于它能学习到一个多么复杂的决策边界，而在于它能通过<strong>逐层对特征空间进行非线性变换</strong>，将一个原本线性不可分的问题，转化为一个在高维空间里线性可分的新问题，<strong>最后用一个简单的线性分类器就能轻松解决</strong>。</p>
+<p>神经网络，尤其是<strong>深度</strong>神经网络，其最核心、最强大的能力，正是<strong>通过其多层次的神经元结构，自动地、从数据中学习和发现最优的特征工程</strong>。</p>
+<ul>
+<li>隐藏层 (Hidden Layer) 的激活函数：<strong>引入非线性，提升模型的表达能力</strong>。</li>
+<li>输出层 (Output Layer) 的激活函数：<strong>将网络最后一层的原始输出值，转换成符合任务需求的、有特定意义的格式</strong>。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>层 (Layer)</th>
+<th>激活函数的主要目的</th>
+<th>常用选择</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>隐藏层 (Hidden Layer)</strong></td>
+<td><strong>引入非线性</strong>，让网络能学习复杂模式。</td>
+<td><strong>ReLU</strong> (最常用)、Leaky ReLU、Tanh 等。</td>
+</tr>
+<tr>
+<td><strong>输出层 (Output Layer)</strong></td>
+<td><strong>格式化输出</strong>，使其符合特定任务的要求。</td>
+<td><strong>Softmax</strong> (多分类)、<strong>Sigmoid</strong> (二分类)、<strong>无激活</strong> (回归)。</td>
+</tr>
+</tbody></table>
+<h2 id="2-激活函数"><a href="#2-激活函数" class="headerlink" title="2 激活函数"></a>2 激活函数</h2><p>激活函数在神经网络中有两个主要作用：</p>
+<ol>
+<li><strong>引入非线性，提升模型表达能力</strong>：这是其<strong>核心作用</strong>。它使得神经网络能够学习数据中复杂的非线性模式，成为一个真正的“通用函数逼近器”。</li>
+<li><strong>控制信息流动，决定神经元是否“激活”</strong>：激活函数可以看作是一个“阀门”或“开关”。它根据输入信号的强度，来决定当前神经元应该在多大程度上被激活（即输出信号的强度），以及是否应该将信息传递给下一层。</li>
+</ol>
+<p>如果没有激活函数 <code>f</code>，一个神经元的输出就是其输入的加权和 <code>y = w₁x₁ + w₂x₂ + ... + b</code>。这是一种<strong>线性变换</strong>。</p>
+<p><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/20250723144005.png" alt="image.png|672"></p>
+<p>当我们在每个神经元的加权和之后，应用一个<strong>非线性</strong>的激活函数 <code>f</code> 时，情况就完全不同了。</p>
+<ul>
+<li>激活函数为网络引入了<strong>非线性</strong>因素。每一层不再是简单的线性变换，而是对数据空间进行一次“<strong>扭曲</strong>”或“<strong>折叠</strong>”</li>
+</ul>
+<p><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/20250723144022.png" alt="image.png|677"></p>
+<p>常见的激活函数及其变体：</p>
+<h3 id="2-1-sigmoid-函数"><a href="#2-1-sigmoid-函数" class="headerlink" title="2.1 sigmoid 函数"></a>2.1 sigmoid 函数</h3><p><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/20250723144237.png" alt="image.png|507"></p>
+<ul>
+<li><strong>形状</strong>：一条平滑的“S”形曲线，能将任意输入值“压缩”到 (0, 1) 区间内。</li>
+<li><strong>优点</strong>：输出范围有限，可以用作概率值；平滑可导。</li>
+<li><strong>缺点</strong>：容易导致<strong>梯度消失</strong>（在反向传播时，当输入值很大或很小时，其梯度接近于 0，导致网络难以训练）；输出不是以 0 为中心。</li>
+<li><strong>应用</strong>：在早期很流行，现在主要用于二分类任务的<strong>输出层</strong>。</li>
+</ul>
+<h3 id="2-2-tanh-函数"><a href="#2-2-tanh-函数" class="headerlink" title="2.2 tanh 函数"></a>2.2 tanh 函数</h3><p><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/20250723144259.png" alt="image.png|482"></p>
+<ul>
+<li><strong>形状</strong>：与 Sigmoid 类似，但输出范围被压缩到 (-1, 1) 区间内。</li>
+<li><strong>优点</strong>：输出以 0 为中心，通常比 Sigmoid 收敛更快。</li>
+<li><strong>缺点</strong>：仍然存在梯度消失的问题。</li>
+</ul>
+<h3 id="2-3-ReLU-函数"><a href="#2-3-ReLU-函数" class="headerlink" title="2.3 ReLU 函数"></a>2.3 ReLU 函数</h3><p><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/20250723144348.png" alt="image.png|532"></p>
+<ul>
+<li><strong>优点</strong>：<ul>
+<li><strong>计算效率极高</strong>。</li>
+<li>在正数区间的梯度恒为 1，极大地<strong>缓解了梯度消失</strong>问题，使深度网络训练成为可能。</li>
+<li>能使网络具有稀疏性（让一些神经元输出为 0）。</li>
+</ul>
+</li>
+<li><strong>缺点</strong>：<strong>Dying ReLU</strong> 问题。如果一个神经元的输入恒为负，那么它将永远不会被激活，其梯度也永远为 0，导致该神经元“死亡”，无法再学习。</li>
+<li><strong>应用</strong>：目前是绝大多数神经网络中<strong>隐藏层</strong>的<strong>首选和默认激活函数</strong>。</li>
+</ul>
+<p>为了解决“Dying ReLU”问题，出现了很多变体，如 <strong>Leaky ReLU</strong>（允许负数输入有一个非常小的非零斜率）、<strong>PReLU</strong>、<strong>ELU</strong> 等。</p>
+<p><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/20250723144509.png" alt="image.png|515"></p>
+<h3 id="2-4-Softmax-函数"><a href="#2-4-Softmax-函数" class="headerlink" title="2.4 Softmax 函数"></a>2.4 Softmax 函数</h3><blockquote>
+<p> Softmax 是专为多分类任务设计的输出层激活函数，它能将一组任意的数字分数，优雅地转换成一个“此消彼长”、总和为 1 的概率分布，让模型的预测结果变得直观且有意义。</p>
+</blockquote>
+<h4 id="2-4-1-Softmax-是什么？——-一个“概率转换器”"><a href="#2-4-1-Softmax-是什么？——-一个“概率转换器”" class="headerlink" title="2.4.1 Softmax 是什么？—— 一个“概率转换器”"></a>2.4.1 Softmax 是什么？—— 一个“概率转换器”</h4><p>从本质上讲，Softmax 函数的作用是将一个包含任意实数（可正可负）的向量，转换成一个<strong>概率分布</strong>向量。</p>
+<p>一个合格的概率分布需要满足两个核心条件：</p>
+<ol>
+<li>向量中的每一个元素值都在 <strong>0 到 1</strong> 之间。</li>
+<li>向量中所有元素的<strong>总和必须等于 1</strong>。</li>
+</ol>
+<p>Softmax 完美地实现了这两点。</p>
+<h4 id="2-4-2-为什么需要-Softmax？——-从原始分数到可解释的概率"><a href="#2-4-2-为什么需要-Softmax？——-从原始分数到可解释的概率" class="headerlink" title="2.4.2 为什么需要 Softmax？—— 从原始分数到可解释的概率"></a>2.4.2 为什么需要 Softmax？—— 从原始分数到可解释的概率</h4><p>想象一下，我们正在训练一个神经网络来识别图片，任务是把它分为三个类别：“猫”、“狗”或“鸟”。</p>
+<p>在经过所有隐藏层的计算后，网络最后一层可能会对这三个类别输出一组原始的、未处理过的分数（我们称之为 <strong>logits</strong>），比如：</p>
+<p><code>[2.9, 1.2, 0.3]</code></p>
+<p>这组分数告诉我们什么？</p>
+<ul>
+<li>我们可以直观地看出，模型认为“猫”的可能性最大（2.9 分），其次是“狗”（1.2 分），最后是“鸟”（0.3 分）。</li>
+<li><strong>但是</strong>，这些分数并不是概率。它们不是在 0 到 1 之间，它们的和也不等于 1。我们无法直接说“这张图片有 290% 的可能是猫”，这毫无意义。</li>
+</ul>
+<p>我们需要一种方法，将这些任意的分数转换成一个直观、有意义的概率分布。<strong>这正是 Softmax 函数要解决的问题。</strong></p>
+<h4 id="2-4-3-Softmax-如何工作？——-两步走的数学魔法"><a href="#2-4-3-Softmax-如何工作？——-两步走的数学魔法" class="headerlink" title="2.4.3 Softmax 如何工作？—— 两步走的数学魔法"></a>2.4.3 Softmax 如何工作？—— 两步走的数学魔法</h4><p>Softmax 的计算过程分为两步：<strong>取指数</strong> 和 <strong>归一化</strong>。</p>
+<p>其数学公式如下：</p>
+<p><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/20250723192102.png" alt="image.png"></p>
+<p>我们用上面的例子 <code>[2.9, 1.2, 0.3]</code> 走一遍计算流程：</p>
+<p><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/20250723192503.png" alt="image.png"></p>
+<h4 id="2-4-4-Softmax-vs-Sigmoid"><a href="#2-4-4-Softmax-vs-Sigmoid" class="headerlink" title="2.4.4 Softmax vs. Sigmoid"></a>2.4.4 Softmax vs. Sigmoid</h4><p>一个常见的困惑是 Softmax 和 Sigmoid 的区别。</p>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>Softmax 函数</th>
+<th>Sigmoid 函数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>应用场景</strong></td>
+<td><strong>多分类</strong>问题（类别之间<strong>互斥</strong>，如猫/狗/鸟）</td>
+<td><strong>二分类</strong>问题（是/否），或<strong>多标签分类</strong>问题</td>
+</tr>
+<tr>
+<td><strong>输出</strong></td>
+<td>输出一个<strong>向量</strong>，所有元素之和为 1，代表一个完整的概率分布</td>
+<td>输出一个<strong>标量</strong>（单一数值），在 0 到 1 之间，代表属于某个正类的概率</td>
+</tr>
+<tr>
+<td><strong>相互关系</strong></td>
+<td>输出是<strong>相互关联</strong>的，一个元素的增加必然导致其他元素的减少</td>
+<td>（在多标签分类中）每个输出是<strong>相互独立</strong>的</td>
+</tr>
+<tr>
+<td><strong>本质</strong></td>
+<td>Sigmoid 函数可以看作是只有两个类别时的 Softmax 函数的特例</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="2-5-如何选择激活函数"><a href="#2-5-如何选择激活函数" class="headerlink" title="2.5 如何选择激活函数"></a>2.5 如何选择激活函数</h3><p>在实践中，我们可以遵循一些通用的指导原则：</p>
+<ol>
+<li><strong>隐藏层的首选：ReLU</strong><ul>
+<li>在不确定用什么时，就用 <code>ReLU</code>。它是绝大多数现代神经网络的默认选择，因为它简单、高效且有效。</li>
+</ul>
+</li>
+<li><strong>如果 ReLU 效果不佳，尝试其变体</strong><ul>
+<li>如果在训练中发现有大量神经元“死亡”，可以尝试使用 <code>Leaky ReLU</code> 或其他变体。</li>
+</ul>
+</li>
+<li><strong>输出层的选择取决于任务类型</strong><ul>
+<li><strong>二分类问题</strong>：在输出层使用 <code>Sigmoid</code> 函数，输出一个概率。</li>
+<li><strong>多分类问题</strong>：在输出层使用 <code>Softmax</code> 函数，输出所有类别的概率分布。</li>
+<li><strong>回归问题</strong>：在输出层<strong>不使用</strong>任何激活函数（或使用线性激活函数），直接输出预测值。</li>
+</ul>
+</li>
+<li><strong>谨慎使用 Sigmoid 和 Tanh</strong><ul>
+<li>由于梯度消失问题，现在已经很少在较深的神经网络的<strong>隐藏层</strong>中使用 <code>Sigmoid</code> 或 <code>Tanh</code>。</li>
+</ul>
+</li>
+</ol>
+<h2 id="3-训练过程"><a href="#3-训练过程" class="headerlink" title="3 训练过程"></a>3 训练过程</h2><p>神经网络的训练就是不断重复以下四个步骤的过程：</p>
+<ol>
+<li><strong>正向传播 (Forward Pass):</strong> 输入一个批次的数据，通过网络计算出预测值 $\hat{y}$​。</li>
+<li><strong>计算损失 (Compute Loss):</strong> 用损失函数计算预测值 $\hat{y}$​ 和真实值 $y$ 之间的差距 $L$。</li>
+<li><strong>反向传播 (Backward Pass):</strong> 从损失函数开始，反向计算出网络中所有参数（$w$ 和 $b$）的梯度。</li>
+<li><strong>更新参数 (Update Parameters):</strong> 使用梯度下降法，根据计算出的梯度和学习率，对参数进行微小的调整。</li>
+</ol>
+<p>这个循环会重复成千上万次，每一次循环，网络的参数都会被微调，使得损失值逐渐降低，网络的预测能力也随之增强，最终达到一个令人满意的精度。</p>
+<h3 id="3-1-正向传播-Forward-Propagation"><a href="#3-1-正向传播-Forward-Propagation" class="headerlink" title="3.1 正向传播 (Forward Propagation)"></a>3.1 正向传播 (Forward Propagation)</h3><p><strong>目标：</strong> 根据给定的输入数据和当前的网络参数（权重和偏置），计算出网络的预测输出。<br><strong>过程：</strong> 这是一个从前到后、逐层计算的过程。</p>
+<p><span style="color: #badc58; font-weight: 550;">1、输入层 (Input Layer): </span> 将你的原始数据（例如，一张图片的像素值，一段文本的词向量）输入到网络的第一层。</p>
+<p><span style="color: #badc58; font-weight: 550;">2、隐藏层 (Hidden Layers):</span></p>
+<ul>
+<li>数据从输入层流向第一个隐藏层。</li>
+<li>在隐藏层的每一个神经元中，都会进行两个关键计算：<br><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/20250723195014.png" alt="image.png"></li>
+</ul>
+<p><span style="color: #badc58; font-weight: 550;">3、逐层向前：</span> 第一个隐藏层的输出，会作为第二个隐藏层的输入。这个 <code>加权求和 -&gt; 激活函数</code> 的过程会逐层重复，直到最后一层。</p>
+<p><span style="color: #badc58; font-weight: 550;">4、输出层 (Output Layer): </span> 这是网络的最后一层，其激活函数的选择通常取决于具体的任务类型：</p>
+<ul>
+<li><strong>回归任务</strong> (如预测房价): 通常使用线性函数或不使用激活函数。</li>
+<li><strong>二分类任务</strong> (如判断猫狗图片): 通常使用 <strong>Sigmoid</strong> 函数，输出一个介于 0 和 1 之间的概率值。</li>
+<li><strong>多分类任务</strong> (如手写数字识别): 通常使用 <strong>Softmax</strong> 函数，输出所有类别的概率分布。</li>
+</ul>
+<p><span style="color: #badc58; font-weight: 550;">注意：</span></p>
+<p>这里隐藏层中的每一个神经元都拥有自己专属的一套权重（weights）和偏置（bias），都会独立地执行一次这个完整的计算过程。</p>
+<p>因为<strong>每个神经元的权重和偏置都是独立学习的</strong>，它们会从相同的输入数据中学会提取不同的信息。</p>
+<p><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/20250723200232.png" alt="image.png"></p>
+<p><a target="_blank" rel="noopener" href="http://playground.tensorflow.org/#activation=relu&regularization=L1&batchSize=10&dataset=xor&regDataset=reg-plane&learningRate=0.003&regularizationRate=0&noise=0&networkShape=2&seed=0.73669&showTestData=false&discretize=false&percTrainData=50&x=true&y=true&xTimesY=false&xSquared=false&ySquared=false&cosX=false&sinX=false&cosY=false&sinY=false&collectStats=false&problem=classification&initZero=false&hideText=false">上图</a> 后面一层中：</p>
+<ul>
+<li><strong>顶部神经元</strong>可能学会了识别一个“左上到右下”的边界模式。</li>
+<li><strong>底部神经元</strong>可能学会了识别一个“左下到右上”的边界模式</li>
+</ul>
+<p>当这两个神经元将它们各自提取出的不同特征（$a_{top}$ 和 $a_$）传递给输出层时，输出层就可以结合这两种不同的模式信息，从而创造出如图中所示的那种更复杂的、非线性的决策边界。</p>
+<h3 id="3-2-损失函数-Loss-Function"><a href="#3-2-损失函数-Loss-Function" class="headerlink" title="3.2 损失函数 (Loss Function)"></a>3.2 损失函数 (Loss Function)</h3><p>在进行反向传播之前，我们需要一个衡量标准来判断我们“错得有多离谱”。这个标准就是<strong>损失函数</strong>（或成本函数，Cost Function）。</p>
+<p>它通过比较网络的预测输出 $\hat{y}$​​ 和真实的标签 $y$ 来计算出一个“损失值”或“误差值”。</p>
+<p><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/20250723200830.png" alt="image.png"></p>
+<p>我们的终极目标是：通过调整网络的权重和偏置，让这个损失函数的值变得尽可能小。</p>
+<h3 id="3-3-反向传播-Backward-Propagation"><a href="#3-3-反向传播-Backward-Propagation" class="headerlink" title="3.3 反向传播 (Backward Propagation)"></a>3.3 反向传播 (Backward Propagation)</h3><p><strong>目标：</strong> 计算损失函数对网络中每一个参数（权重 w 和偏置 b）的梯度（偏导数）。这个梯度指明了我们应该朝着哪个方向、以多大的幅度去调整参数，才能最快地减小损失。</p>
+<p><strong>核心原理：</strong> **链式法则 (Chain Rule)**，这是微积分中的一个基本规则。由于整个网络（从输入到最终的损失）是由一系列复合函数构成的，链式法则允许我们将最终的损失，层层反向地分解，计算出它对网络中任意一个参数的偏导数。</p>
+<p><strong>过程：</strong> 这是一个从后向前、逐层计算梯度的过程。</p>
+<p><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/20250723201209.png" alt="image.png"></p>
+<p><strong>关键思想：</strong> 每一层的梯度计算，都依赖于它后面那一层已经计算出的梯度。这就是“反向”传播的含义。</p>
+<p><span style="color: #badc58; font-weight: 550;">举个例子：</span></p>
+<p>如下图：要想知道 <code>w₁</code> 的微小变化对最终损失 <code>E</code> 产生多大影响，我们需要将这个影响链条从后向前、一步步地乘起来。</p>
+<p><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/20250723193404.png" alt="image.png|615"></p>
+<p>计算梯度：将所有这些导数项相乘，我们就得到了最终的梯度 $\frac{\partial E}{\partial w_1}$。这个数值精确地告诉我们，为了降低损失 $E$，$w_1$ 需要进行多大的调整。</p>
+<p>同理，我们可以计算出 $\frac{\partial E}{\partial w_2}$、$\frac{\partial E}{\partial w_3}$ 和 $\frac{\partial E}{\partial w_4}$。</p>
+<h3 id="3-4-参数更新-Weight-Update"><a href="#3-4-参数更新-Weight-Update" class="headerlink" title="3.4 参数更新 (Weight Update)"></a>3.4 参数更新 (Weight Update)</h3><p>当反向传播完成，我们获得了所有参数的梯度后，就可以用<strong>梯度下降（Gradient Descent）</strong>算法来更新参数了。</p>
+<p>更新规则非常简单：</p>
+<p><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/20250723201509.png" alt="image.png"></p>
+<p>这里的 <strong>学习率（Learning Rate, α）</strong> 是一个超参数，它控制了每次更新参数的步长。如果学习率太大，可能会在最优点附近来回震荡甚至发散；如果太小，收敛速度会非常慢。</p>
+<p><span style="color: #badc58; font-weight: 550;">还是上面那个例子：</span></p>
+<p><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/20250723201648.png" alt="image.png"></p>
+<p>所有其他的权重（<code>w₂</code>, <code>w₃</code>, <code>w₄</code>）和所有偏置（<code>b₁</code>, <code>b₂</code>…）也都会用同样的方式，根据它们各自的梯度进行更新。</p>
+<p>完成这四步后，网络中的所有参数都进行了一次微调。然后，整个循环（正向传播 -&gt; 计算损失 -&gt; 反向传播 -&gt; 更新参数）会用新的一批数据再次开始。通过成千上万次的重复这个过程，损失 <code>E</code> 会被逐渐最小化，模型的预测也会越来越准。</p>
+<h2 id="4-梯度下降相关问题"><a href="#4-梯度下降相关问题" class="headerlink" title="4 梯度下降相关问题"></a>4 梯度下降相关问题</h2><p>[[04_机器学习_基础概念#寻找最优解：梯度下降 (Gradient Descent)]]</p>
+<h3 id="4-1-优化原则"><a href="#4-1-优化原则" class="headerlink" title="4.1 优化原则"></a>4.1 优化原则</h3><table>
+<thead>
+<tr>
+<th>核心要素 (Core Element)</th>
+<th>核心问题 (Key Question)</th>
+<th>具体内容 / 方法 (Specific Content / Methods)</th>
+<th>主要作用 / 目标 (Main Role / Goal)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>搜索策略</strong> (Search Strategy)</td>
+<td><strong>“向哪个方向走？”</strong></td>
+<td>选择优化算法（优化器），如：  <br>• SGD, Momentum  <br>• Adagrad, RMSProp, Adam</td>
+<td>• 决定参数更新的方向  <br>• 加速收敛  <br>• 帮助跳出局部最优解</td>
+</tr>
+<tr>
+<td><strong>步长选择</strong> (Step Size Selection)</td>
+<td><strong>“每一步走多远？”</strong></td>
+<td>设置和调整**学习率 (Learning Rate, α)**。  <br>可以是固定的，也可以是动态变化的（如学习率衰减）。</td>
+<td>• 保证收敛的稳定性和效率  <br>• 防止因步长过大而震荡，或因过小而收敛缓慢</td>
+</tr>
+<tr>
+<td><strong>参数初始值选择</strong> (Parameter Initial Value)</td>
+<td><strong>“从哪里开始走？”</strong></td>
+<td>为模型的权重和偏置设置初始值，如：  <br>• Xavier 初始化  <br>• He 初始化</td>
+<td>• 打破对称性，让不同神经元学习不同特征  <br>• 加速收敛  <br>• 防止梯度消失或梯度爆炸</td>
+</tr>
+<tr>
+<td><strong>特征归一化</strong> (Feature Normalization)</td>
+<td><strong>“如何让路更好走？”</strong></td>
+<td>对输入数据进行预处理，如：  <br>• 标准化 (均值为 0, 方差为 1)  <br>• 归一化 (缩放到 [0, 1] 区间)</td>
+<td>• 使损失函数的“地形”更平滑规整  <br>• 大幅加速梯度下降的收敛速度  <br>• 提高模型的稳定性和性能</td>
+</tr>
+</tbody></table>
+<h3 id="4-2-搜索策略"><a href="#4-2-搜索策略" class="headerlink" title="4.2 搜索策略"></a>4.2 搜索策略</h3><table>
+<thead>
+<tr>
+<th>优化器 (Optimizer)</th>
+<th>核心思想 (Core Idea)</th>
+<th>优点 (Advantages)</th>
+<th>缺点 (Disadvantages)</th>
+<th>学习率特点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>批量梯度下降 (BGD)</strong></td>
+<td>每次更新使用<strong>全部</strong>训练数据。</td>
+<td>梯度准确，收敛路径平滑稳定。</td>
+<td>速度极慢，内存消耗巨大，不适用于大数据集。</td>
+<td>全局固定</td>
+</tr>
+<tr>
+<td><strong>随机梯度下降 (SGD)</strong></td>
+<td>每次更新<strong>随机使用 1 个</strong>样本。</td>
+<td>更新速度快，内存占用小，有助于跳出局部最优。</td>
+<td>收敛路径震荡剧烈，噪声大。</td>
+<td>全局固定</td>
+</tr>
+<tr>
+<td><strong>小批量梯度下降 (Mini-batch)</strong></td>
+<td>每次更新使用<strong>一小批</strong>数据，是前两者的折中。</td>
+<td>兼顾了速度与稳定性，是最高效的训练方式，<strong>现代深度学习标准</strong>。</td>
+<td>引入了超参数“批量大小 (batch size)”。</td>
+<td>全局固定</td>
+</tr>
+<tr>
+<td><strong>动量法 (Momentum)</strong></td>
+<td>在更新时加入“惯性”，累积过去梯度的方向。</td>
+<td>加速收敛，有效减少在“峡谷”地形中的震荡。</td>
+<td>增加了一个“动量系数”超参数。</td>
+<td>全局固定</td>
+</tr>
+<tr>
+<td><strong>Adagrad</strong></td>
+<td>为每个参数计算<strong>自适应</strong>学习率，基于<strong>所有</strong>历史梯度。</td>
+<td>对稀疏数据非常有效，无需手动调整学习率。</td>
+<td>学习率单调递减，后期可能过小导致训练提前停止。</td>
+<td>每个参数独立、自适应</td>
+</tr>
+<tr>
+<td><strong>RMSProp</strong></td>
+<td>采用<strong>衰减平均</strong>的方式计算历史梯度，解决 Adagrad 的问题。</td>
+<td>避免了学习率过早消失的问题，比 Adagrad 更灵活。</td>
+<td>仍需设置一个全局学习率。</td>
+<td>每个参数独立、自适应</td>
+</tr>
+<tr>
+<td><strong>Adadelta</strong></td>
+<td>类似于 RMSProp，但通过额外技巧<strong>消除了学习率</strong>这个超参数。</td>
+<td>无需设置学习率。</td>
+<td>实践中可能不稳定，目前使用较少。</td>
+<td>每个参数独立、自适应</td>
+</tr>
+<tr>
+<td><strong>Adam</strong></td>
+<td><strong>集大成者</strong>，结合了<strong>动量法</strong>和<strong>RMSProp</strong>的优点。</td>
+<td>结合了两者的优点，收敛快、稳定，对多数问题效果好，是<strong>当前最常用</strong>的优化器。</td>
+<td>理论上在某些情况下可能不收敛。</td>
+<td>每个参数独立、自适应、带动量</td>
+</tr>
+</tbody></table>
+<ul>
+<li>数据量不大选<strong>批量</strong>梯度下降法</li>
+<li>数据量大选<strong>小批量</strong>梯度下降法</li>
+<li><strong>标配 Adam</strong>，但具体看效果</li>
+<li>其他最优化方法：牛顿法、拟牛顿法等等</li>
+</ul>
+<h3 id="4-3-梯度消失和梯度爆炸"><a href="#4-3-梯度消失和梯度爆炸" class="headerlink" title="4.3 梯度消失和梯度爆炸"></a>4.3 梯度消失和梯度爆炸</h3><table>
+<thead>
+<tr>
+<th>问题</th>
+<th><strong>梯度消失 (Vanishing Gradient)</strong></th>
+<th><strong>梯度爆炸 (Exploding Gradient)</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>核心原因</strong></td>
+<td>激活函数的导数<strong>持续小于 1</strong></td>
+<td>权重的数值<strong>持续大于 1</strong></td>
+</tr>
+<tr>
+<td><strong>直接后果</strong></td>
+<td>连乘后梯度趋近于<strong>零</strong></td>
+<td>连乘后梯度趋近于<strong>无穷大</strong></td>
+</tr>
+<tr>
+<td><strong>对训练的影响</strong></td>
+<td>导致<strong>网络退化</strong>，模型<strong>无法有效训练</strong>，早期层参数不更新</td>
+<td>模型<strong>训练不稳定</strong>，参数更新过大导致崩溃</td>
+</tr>
+<tr>
+<td>![image.png</td>
+<td>665](<a target="_blank" rel="noopener" href="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/20250723162916.png">https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/20250723162916.png</a>)</td>
+<td></td>
+</tr>
+</tbody></table>
+<ul>
+<li>图中以 <strong>Sigmoid 函数</strong>为例，它的导数最大值仅为 0.25，并且在输入值较大或较小时，其导数会趋近于 0。</li>
+<li>在反向传播的连乘计算中，如果大部分 $f^′(x_i​)$ 的值都是一个远小于 1 的小数（例如 0.2），多个这样的小数相乘，结果会以指数级速度快速缩小，最终趋近于 0。</li>
+</ul>
+<p><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/20250723162900.png" alt="image.png|616"></p>
+<ul>
+<li>如果网络中的权重 wi​ 被初始化得较大，或者在训练中持续增大，导致它们的值普遍<strong>大于 1</strong>。</li>
+<li>在反向传播的连乘计算中，多个大于 1 的数相乘，结果会以指数级速度快速增大，最终形成一个巨大的数值。</li>
+</ul>
+<p>为了解决这两个问题，研究人员提出了一系列有效的策略：</p>
+<ol>
+<li><strong>更换激活函数</strong>：使用 <strong>ReLU</strong> 及其变种作为激活函数（它们的导数在正区间恒为 1，缓解了梯度消失</li>
+<li>设计新的网络架构（如<strong>残差网络 ResNet</strong>）</li>
+<li><strong>梯度剪切</strong>：设定一个梯度的上限阈值。在反向传播计算出梯度后，如果梯度的范数（可以理解为梯度向量的长度或大小）超过了这个阈值，就将其强制缩放到阈值的大小。<br><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/20250723204056.png" alt="image.png"><ul>
+<li>左图展示了没有梯度剪切时，由于某次梯度过大（梯度爆炸），导致参数更新的“步子”迈得太大，直接“飞出”了最优解区域，使得训练不稳定。</li>
+<li>右图展示了使用梯度剪切后，过大的梯度被“修剪”回一个合理的范围，使得参数更新的步伐平稳可控，能够稳定地走向最优解。</li>
+</ul>
+</li>
+<li>采用更科学的<strong>权重初始化方法</strong>（如 Xavier/He 初始化）</li>
+<li>使用<strong>批量归一化 (Batch Normalization)</strong></li>
+</ol>
+<h2 id="5-神经网络优缺点"><a href="#5-神经网络优缺点" class="headerlink" title="5 神经网络优缺点"></a>5 神经网络优缺点</h2><table>
+<thead>
+<tr>
+<th>优点 (Advantages)</th>
+<th>缺点 (Disadvantages)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>1. 强大的学习能力</strong>  <br>能够自动学习极其复杂的非线性模式和数据特征。</td>
+<td><strong>1. 黑盒与不可解释性</strong>  <br>决策过程不透明，难以理解模型“为什么”这么做，在关键领域应用受限。</td>
+</tr>
+<tr>
+<td><strong>2. 卓越的性能与准确率</strong>  <br>在图像、语音、自然语言等领域是业界顶尖 (SOTA) 技术，准确率高。</td>
+<td><strong>2. 训练成本高昂</strong>  <br>需要强大的硬件（如 GPU/TPU），且训练大型模型耗时数天甚至数周。</td>
+</tr>
+<tr>
+<td><strong>3. 广泛的通用性</strong>  <br>单一架构（如 Transformer）可应用于多种不同的任务和数据类型。</td>
+<td><strong>3. 巨大的数据需求</strong>  <br>通常需要海量的高质量标注数据才能达到理想性能，数据获取成本高。</td>
+</tr>
+<tr>
+<td><strong>4. 数据越多，性能越好</strong>  <br>模型性能会随着数据量的增加而持续提升，非常适合大数据时代。</td>
+<td><strong>4. 训练调试复杂</strong>  <br>对网络结构、学习率等大量超参数的选择非常敏感，需要丰富经验和大量实验。</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>5. 容易过拟合</strong>  <br>模型参数多，极易“记住”训练数据而非学习通用规律，需依赖正则化等技巧。</td>
+</tr>
+</tbody></table>
+<h2 id="6-代码实现"><a href="#6-代码实现" class="headerlink" title="6 代码实现"></a>6 代码实现</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> warnings  </span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np  </span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt  </span><br><span class="line"><span class="keyword">from</span> sklearn.neural_network <span class="keyword">import</span> MLPClassifier  </span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split  </span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> StandardScaler  </span><br><span class="line"><span class="keyword">from</span> sklearn.pipeline <span class="keyword">import</span> make_pipeline  </span><br><span class="line">  </span><br><span class="line">warnings.filterwarnings(<span class="string">&#x27;ignore&#x27;</span>)  </span><br><span class="line">  </span><br><span class="line"><span class="comment"># --- Matplotlib 中文显示设置 ---# 确保您的系统中有 &#x27;SimHei&#x27; 字体，或者换成您系统里有的中文字体，如 &#x27;Microsoft YaHei&#x27;plt.rcParams[&#x27;font.sans-serif&#x27;] = [&#x27;Microsoft YaHei&#x27;]  </span></span><br><span class="line">plt.rcParams[<span class="string">&#x27;axes.unicode_minus&#x27;</span>] = <span class="literal">False</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 1. 生成和拆分数据集  </span></span><br><span class="line">np.random.seed(<span class="number">0</span>)  </span><br><span class="line">X = np.random.normal(<span class="number">0</span>,<span class="number">1</span>,size=(<span class="number">200</span>,<span class="number">2</span>))  </span><br><span class="line">y = np.array((X[:,<span class="number">0</span>]**<span class="number">2</span>)+(X[:,<span class="number">1</span>]**<span class="number">2</span>)&lt;<span class="number">2</span>, dtype=<span class="string">&#x27;int&#x27;</span>)  </span><br><span class="line">x_train, x_test, y_train, y_test = train_test_split(X, y, train_size = <span class="number">0.7</span>, random_state = <span class="number">233</span>, stratify = y)  </span><br><span class="line">  </span><br><span class="line">plt.scatter(x_train[:,<span class="number">0</span>], x_train[:,<span class="number">1</span>], c = y_train)  </span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/20250723211811.png" alt="image.png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 2. 定义并训练模型  </span></span><br><span class="line">  </span><br><span class="line"><span class="comment"># 创建一个处理流程“管道” (Pipeline)，它会按顺序执行每个步骤  </span></span><br><span class="line">nn_pipeline = make_pipeline(  </span><br><span class="line">    <span class="comment"># 第一步：数据标准化。将所有特征缩放到均值为0，方差为1，这对于神经网络的稳定训练至关重要  </span></span><br><span class="line">    StandardScaler(),  </span><br><span class="line">    <span class="comment"># 第二步：定义多层感知机（MLP）分类器，即神经网络模型  </span></span><br><span class="line">    MLPClassifier(  </span><br><span class="line">        <span class="comment"># 定义隐藏层结构。这里有两个隐藏层，第一个有10个神经元，第二个有5个神经元。  </span></span><br><span class="line">        <span class="comment"># 网络的结构是：输入层 -&gt; 10个神经元的隐藏层 -&gt; 5个神经元的隐藏层 -&gt; 输出层  </span></span><br><span class="line">        hidden_layer_sizes=(<span class="number">10</span>, <span class="number">5</span>),  </span><br><span class="line">        <span class="comment"># 设置激活函数为ReLU。这是一种常用且高效的非线性激活函数。  </span></span><br><span class="line">        activation=<span class="string">&#x27;relu&#x27;</span>,   </span><br><span class="line"><span class="comment"># 设置初始学习率。这是梯度下降算法每一步的“步长”。  </span></span><br><span class="line">        learning_rate_init=<span class="number">0.01</span>,   </span><br><span class="line"><span class="comment"># 设置随机种子，以确保每次运行代码时，权重的随机初始化和数据的划分结果都相同，便于复现实验。  </span></span><br><span class="line">        random_state=<span class="number">233</span>,  </span><br><span class="line">        <span class="comment"># 设置优化器为&#x27;sgd&#x27;（随机梯度下降）。它决定了如何根据梯度来更新权重。  </span></span><br><span class="line">        solver=<span class="string">&#x27;sgd&#x27;</span>,  </span><br><span class="line">        <span class="comment"># 设置最大迭代次数。模型将最多训练1000个轮次（epoch），或在损失不再改善时提前停止。  </span></span><br><span class="line">        max_iter=<span class="number">1000</span>  </span><br><span class="line">    )  </span><br><span class="line">)  </span><br><span class="line">  </span><br><span class="line"><span class="comment"># 使用训练数据 (x_train, y_train) 对整个管道进行训练  </span></span><br><span class="line"><span class="comment"># .fit()会自动先用StandardScaler对x_train进行“学习”和“转换”，然后再用转换后的数据来训练MLPClassifier  </span></span><br><span class="line">nn_pipeline.fit(x_train, y_train)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 创建用于绘制决策边界的网格  </span></span><br><span class="line"><span class="comment"># 确定x和y轴的范围，并增加一点边距  </span></span><br><span class="line">x_min, x_max = X[:, <span class="number">0</span>].<span class="built_in">min</span>() - <span class="number">0.5</span>, X[:, <span class="number">0</span>].<span class="built_in">max</span>() + <span class="number">0.5</span>  </span><br><span class="line">y_min, y_max = X[:, <span class="number">1</span>].<span class="built_in">min</span>() - <span class="number">0.5</span>, X[:, <span class="number">1</span>].<span class="built_in">max</span>() + <span class="number">0.5</span>  </span><br><span class="line"><span class="comment"># 以0.02为步长创建网格点  </span></span><br><span class="line">xx, yy = np.meshgrid(np.arange(x_min, x_max, <span class="number">0.02</span>),  </span><br><span class="line">                     np.arange(y_min, y_max, <span class="number">0.02</span>))  </span><br><span class="line">  </span><br><span class="line"><span class="comment"># 4. 对网格中的每个点进行预测  </span></span><br><span class="line"><span class="comment"># 将网格点转换为模型需要的格式，并进行预测  </span></span><br><span class="line">grid_points = np.c_[xx.ravel(), yy.ravel()]  </span><br><span class="line">Z = nn_pipeline.predict(grid_points)  </span><br><span class="line">Z = Z.reshape(xx.shape) <span class="comment"># 将预测结果转换回网格的形状  </span></span><br><span class="line">  </span><br><span class="line"><span class="comment"># 5. 绘制决策边界和数据点  </span></span><br><span class="line">plt.figure(figsize=(<span class="number">8</span>, <span class="number">8</span>))  </span><br><span class="line"><span class="comment"># 绘制决策区域的填充等高线图  </span></span><br><span class="line">plt.contourf(xx, yy, Z, cmap=plt.cm.RdBu, alpha=<span class="number">0.4</span>)  </span><br><span class="line">plt.scatter(x_train[:,<span class="number">0</span>], x_train[:,<span class="number">1</span>], c = y_train)  </span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://picgocloud.oss-cn-shanghai.aliyuncs.com/picgo/20250723211831.png" alt="image.png|478"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://VernalScenery.github.io">Scenery</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://vernalscenery.github.io/2025/07/23/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86/07_%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0_%E5%A4%9A%E5%B1%82%E6%84%9F%E7%9F%A5%E6%9C%BA(MLP)/">https://vernalscenery.github.io/2025/07/23/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86/07_%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0_%E5%A4%9A%E5%B1%82%E6%84%9F%E7%9F%A5%E6%9C%BA(MLP)/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://VernalScenery.github.io" target="_blank">春和景明的记事本</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></div><div class="post_share"><div class="social-share" data-image="/./img/1.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2025/07/24/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86/08_%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0_%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BA/" title="08_机器学习_支持向量机"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">08_机器学习_支持向量机</div></div></a></div><div class="next-post pull-right"><a href="/2025/07/22/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86/04_%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0_%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5/" title="04_机器学习_基础概念"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">04_机器学习_基础概念</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2025/07/04/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86/00_%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0_KNN%E7%AE%97%E6%B3%95/" title="00_机器学习_KNN算法"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-07-04</div><div class="title">00_机器学习_KNN算法</div></div></a></div><div><a href="/2025/07/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86/01_%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0_%E6%84%9F%E7%9F%A5%E6%9C%BA/" title="01_机器学习_感知机"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-07-18</div><div class="title">01_机器学习_感知机</div></div></a></div><div><a href="/2025/07/03/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86/00_%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0_%E6%A6%82%E8%A7%88%E3%80%81%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" title="00_机器学习_概览、环境搭建"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-07-03</div><div class="title">00_机器学习_概览、环境搭建</div></div></a></div><div><a href="/2025/07/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86/02_%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0_%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/" title="02_机器学习_线性回归"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-07-21</div><div class="title">02_机器学习_线性回归</div></div></a></div><div><a href="/2025/07/22/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86/04_%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0_%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5/" title="04_机器学习_基础概念"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-07-22</div><div class="title">04_机器学习_基础概念</div></div></a></div><div><a href="/2025/07/22/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86/03_%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0_%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/" title="03_机器学习_逻辑回归"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-07-22</div><div class="title">03_机器学习_逻辑回归</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/./img/1.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Scenery</div><div class="author-info__description">今天不想跑，所以才去跑</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">73</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">14</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/chjm0121" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="/1595718686@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3"><span class="toc-text">1 核心思想</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E5%A4%9A%E5%B1%82-%EF%BC%9F%E2%80%94%E2%80%94-%E5%8D%95%E5%B1%82%E6%84%9F%E7%9F%A5%E6%9C%BA%E7%9A%84%E5%B1%80%E9%99%90%E6%80%A7"><span class="toc-text">1.1 为什么需要多层 ？—— 单层感知机的局限性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E5%A4%9A%E5%B1%82%E6%84%9F%E7%9F%A5%E6%9C%BA%E7%9A%84%E6%9E%B6%E6%9E%84"><span class="toc-text">1.2 多层感知机的架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-MLP-%E7%9A%84%E2%80%9C%E7%A7%98%E5%AF%86%E6%AD%A6%E5%99%A8%E2%80%9D%EF%BC%9A%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0"><span class="toc-text">1.3 MLP 的“秘密武器”：非线性激活函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0"><span class="toc-text">2 激活函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-sigmoid-%E5%87%BD%E6%95%B0"><span class="toc-text">2.1 sigmoid 函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-tanh-%E5%87%BD%E6%95%B0"><span class="toc-text">2.2 tanh 函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-ReLU-%E5%87%BD%E6%95%B0"><span class="toc-text">2.3 ReLU 函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-Softmax-%E5%87%BD%E6%95%B0"><span class="toc-text">2.4 Softmax 函数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-4-1-Softmax-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F%E2%80%94%E2%80%94-%E4%B8%80%E4%B8%AA%E2%80%9C%E6%A6%82%E7%8E%87%E8%BD%AC%E6%8D%A2%E5%99%A8%E2%80%9D"><span class="toc-text">2.4.1 Softmax 是什么？—— 一个“概率转换器”</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-4-2-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81-Softmax%EF%BC%9F%E2%80%94%E2%80%94-%E4%BB%8E%E5%8E%9F%E5%A7%8B%E5%88%86%E6%95%B0%E5%88%B0%E5%8F%AF%E8%A7%A3%E9%87%8A%E7%9A%84%E6%A6%82%E7%8E%87"><span class="toc-text">2.4.2 为什么需要 Softmax？—— 从原始分数到可解释的概率</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-4-3-Softmax-%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%EF%BC%9F%E2%80%94%E2%80%94-%E4%B8%A4%E6%AD%A5%E8%B5%B0%E7%9A%84%E6%95%B0%E5%AD%A6%E9%AD%94%E6%B3%95"><span class="toc-text">2.4.3 Softmax 如何工作？—— 两步走的数学魔法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-4-4-Softmax-vs-Sigmoid"><span class="toc-text">2.4.4 Softmax vs. Sigmoid</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-5-%E5%A6%82%E4%BD%95%E9%80%89%E6%8B%A9%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0"><span class="toc-text">2.5 如何选择激活函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E8%AE%AD%E7%BB%83%E8%BF%87%E7%A8%8B"><span class="toc-text">3 训练过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E6%AD%A3%E5%90%91%E4%BC%A0%E6%92%AD-Forward-Propagation"><span class="toc-text">3.1 正向传播 (Forward Propagation)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0-Loss-Function"><span class="toc-text">3.2 损失函数 (Loss Function)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD-Backward-Propagation"><span class="toc-text">3.3 反向传播 (Backward Propagation)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-%E5%8F%82%E6%95%B0%E6%9B%B4%E6%96%B0-Weight-Update"><span class="toc-text">3.4 参数更新 (Weight Update)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98"><span class="toc-text">4 梯度下降相关问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E4%BC%98%E5%8C%96%E5%8E%9F%E5%88%99"><span class="toc-text">4.1 优化原则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E6%90%9C%E7%B4%A2%E7%AD%96%E7%95%A5"><span class="toc-text">4.2 搜索策略</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-%E6%A2%AF%E5%BA%A6%E6%B6%88%E5%A4%B1%E5%92%8C%E6%A2%AF%E5%BA%A6%E7%88%86%E7%82%B8"><span class="toc-text">4.3 梯度消失和梯度爆炸</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-text">5 神经网络优缺点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="toc-text">6 代码实现</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/07/29/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86/13_%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0_%E6%A6%82%E7%8E%87%E5%9B%BE%E6%A8%A1%E5%9E%8B/" title="13_机器学习_概率图模型">13_机器学习_概率图模型</a><time datetime="2025-07-29T00:29:02.000Z" title="发表于 2025-07-29 08:29:02">2025-07-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/07/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86/11_%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0_%E8%81%9A%E7%B1%BB/" title="11_机器学习_聚类">11_机器学习_聚类</a><time datetime="2025-07-28T00:19:53.000Z" title="发表于 2025-07-28 08:19:53">2025-07-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/07/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86/12_%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0_%E9%99%8D%E7%BB%B4/" title="12_机器学习_降维">12_机器学习_降维</a><time datetime="2025-07-27T20:48:42.000Z" title="发表于 2025-07-28 04:48:42">2025-07-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/07/26/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86/10_%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0_%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/" title="10_机器学习_集成学习">10_机器学习_集成学习</a><time datetime="2025-07-26T01:58:53.000Z" title="发表于 2025-07-26 09:58:53">2025-07-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/07/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86/09_%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0_%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF/" title="09_机器学习_朴素贝叶斯">09_机器学习_朴素贝叶斯</a><time datetime="2025-07-25T03:08:47.000Z" title="发表于 2025-07-25 11:08:47">2025-07-25</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/./img/1.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By Scenery</div><div class="footer_custom_text"><div>波澜不惊</div><div class="footer-div"><img class="footer-icon" src="./img/备案图标.png"><a class="footer-a" target="_blank" rel="noopener" href="http://beian.miit.gov.cn/">皖ICP备2021016944号-1</a></div></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>
